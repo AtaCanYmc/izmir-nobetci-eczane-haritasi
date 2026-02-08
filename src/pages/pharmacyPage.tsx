@@ -2,6 +2,7 @@ import {useEffect, useState, useMemo} from 'react';
 import {fetchNobetciEczaneler, openEczaneOnMap} from "../services/api";
 import type {Eczane} from "../types/eczane.ts";
 import {PharmacyMap} from "../components/pharmacyMap.tsx";
+import logo from '../assets/eczane_logo.jpg';
 
 const PharmacyPage = () => {
     const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
@@ -31,10 +32,25 @@ const PharmacyPage = () => {
         );
     }, [eczaneler, searchTerm]);
 
+    const getIconAndTitle = () => {
+        return (
+            <div className="flex flex-row items-center justify-between">
+                <div className="text-left ml-1">
+                    <h1 className="text-2xl font-black text-red-600 tracking-tighter">
+                        İZMİR ECZANE
+                    </h1>
+                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">
+                        Nöbetçi Eczane Listesi
+                    </p>
+                </div>
+                <img src={logo} alt="E" className="w-12 h-12"/>
+            </div>
+        );
+    };
+
     const getAsideHeader = () => (
         <div className="p-6 border-b border-slate-50 bg-white">
-            <h1 className="text-2xl font-black text-red-600 tracking-tighter">İZMİR ECZANE</h1>
-            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Nöbetçi Listesi</p>
+            {getIconAndTitle()}
 
             <div className="mt-6">
                 <input
