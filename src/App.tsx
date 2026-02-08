@@ -1,4 +1,3 @@
-import './App.css'
 import PharmacyPage from "./pages/pharmacyPage.tsx";
 
 function App() {

@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
-import { fetchNobetciEczaneler } from "../services/api";
-import type { Eczane } from "../types/eczane.ts";
+import {useEffect, useState, useMemo} from 'react';
+import {fetchNobetciEczaneler} from "../services/api";
+import type {Eczane} from "../types/eczane.ts";
 import {PharmacyMap} from "../components/pharmacyMap.tsx";
 
 const PharmacyPage = () => {
@@ -21,7 +21,7 @@ const PharmacyPage = () => {
                 setLoading(false);
             }
         };
-        loadData();
+        loadData().then(r => r);
     }, []);
 
     const filteredEczaneler = useMemo(() => {
@@ -32,99 +32,94 @@ const PharmacyPage = () => {
     }, [eczaneler, searchTerm]);
 
     return (
-        // h-screen yerine min-h-screen ve h-screen beraber kullanımı flex-1'in çökmesini engeller
-        <div className="flex h-screen w-screen overflow-hidden text-black bg-white">
+        <div className="flex h-screen w-full overflow-hidden bg-white">
 
-            {/* SIDEBAR */}
-            <aside className="hidden md:flex flex-col w-96 bg-white border-r border-slate-200 shadow-xl z-20">
-                <div className="p-6 border-b border-slate-100 bg-white">
-                    <h1 className="text-2xl font-black text-red-600 tracking-tight">İzmir Eczane</h1>
-                    <p className="text-slate-400 text-xs font-bold uppercase mt-1 tracking-widest">Nöbetçi Listesi</p>
+            {/* SIDEBAR (SOL PANEL) */}
+            {/* md:flex ile webde görünür kılıp, w-[380px] ile sabit bir genişlik verdik */}
+            <aside className="hidden md:flex flex-col w-[380px] h-full border-r border-slate-200 bg-white z-20 shrink-0 shadow-2xl">
+                <div className="p-6 border-b border-slate-50 bg-white">
+                    <h1 className="text-2xl font-black text-red-600 tracking-tighter">İZMİR ECZANE</h1>
+                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Nöbetçi Listesi</p>
 
-                    <div className="mt-6 relative">
+                    <div className="mt-6">
                         <input
                             type="text"
-                            placeholder="İlçe veya eczane ara..."
-                            className="w-full pl-10 pr-4 py-3 bg-slate-100 rounded-2xl border-none focus:ring-2 focus:ring-red-500 transition-all text-sm outline-none"
+                            placeholder="Eczane veya ilçe ara..."
+                            className="w-full px-4 py-3 bg-slate-100 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none transition-all"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <span className="absolute left-3 top-3.5 opacity-30">🔍</span>
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/30">
                     {loading ? (
-                        <div className="flex items-center justify-center h-full text-slate-400 animate-pulse">
+                        <div className="flex flex-col items-center justify-center h-40 text-slate-400 animate-pulse italic">
                             Yükleniyor...
                         </div>
-                    ) : filteredEczaneler.map((eczane) => (
-                        <div
-                            key={`${eczane.Adi}-${eczane.LokasyonX}`}
-                            onClick={() => setSelectedEczane(eczane)}
-                            className={`p-4 rounded-2xl border transition-all duration-300 cursor-pointer ${
-                                selectedEczane?.Adi === eczane.Adi
-                                    ? 'border-red-500 bg-white shadow-lg scale-[1.02]'
-                                    : 'border-white bg-white hover:border-red-200 shadow-sm'
-                            }`}
-                        >
-                            <h3 className="font-bold text-slate-800">{eczane.Adi}</h3>
-                            <p className="text-xs text-slate-500 mt-1">{eczane.Adres}</p>
-                            <div className="flex items-center justify-between mt-3">
-                                <span className="text-[10px] bg-red-50 px-2 py-1 rounded-lg text-red-600 font-bold">
-                                    {eczane.Bolge}
-                                </span>
-                                <span className="text-xs text-blue-600 font-semibold">{eczane.Telefon}</span>
+                    ) : (
+                        filteredEczaneler.map((eczane) => (
+                            <div
+                                key={`${eczane.Adi}-${eczane.LokasyonX}`}
+                                onClick={() => setSelectedEczane(eczane)}
+                                className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                                    selectedEczane?.Adi === eczane.Adi
+                                        ? 'border-red-500 bg-white shadow-md ring-1 ring-red-500/20'
+                                        : 'border-transparent bg-white hover:border-slate-200 shadow-sm'
+                                }`}
+                            >
+                                <h3 className="font-bold text-slate-800 tracking-tight">{eczane.Adi}</h3>
+                                <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">{eczane.Adres}</p>
+                                <div className="flex items-center justify-between mt-3">
+                                    <span className="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-600 font-bold uppercase">
+                                        {eczane.Bolge}
+                                    </span>
+                                    <span className="text-xs text-red-600 font-bold">{eczane.Telefon}</span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
             </aside>
 
-            {/* HARİTA ALANI */}
-            <main className="flex-1 relative h-full">
-                {/* Mobil Header */}
-                <div className="absolute top-4 left-4 right-4 z-[1000] md:hidden">
-                    <div className="bg-white/95 backdrop-blur shadow-xl p-3 rounded-2xl flex items-center gap-3">
-                        <input
-                            type="text"
-                            placeholder="Eczane ara..."
-                            className="flex-1 bg-transparent outline-none text-sm"
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <div className="bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">
-                            {filteredEczaneler.length}
-                        </div>
+            {/* HARİTA ALANI (SAĞ PANEL) */}
+            {/* flex-1 sayesinde sidebar'dan kalan tüm alanı kaplar */}
+            <main className="flex-1 relative bg-slate-100">
+                {/* Yükleme Ekranı */}
+                {loading && (
+                    <div className="absolute inset-0 z-[1001] bg-white/60 backdrop-blur-sm flex items-center justify-center">
+                        <div className="w-10 h-10 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
                     </div>
-                </div>
+                )}
 
-                {/* Haritayı saran div'in yüksekliği zorunlu */}
-                <div className="absolute inset-0 w-full h-full">
+                {/* Harita */}
+                <div className="absolute inset-0 h-full w-full">
                     <PharmacyMap
                         eczaneler={filteredEczaneler}
                         selectedEczane={selectedEczane}
-                        onMarkerClick={(eczane) => setSelectedEczane(eczane)}
+                        onMarkerClick={setSelectedEczane}
                     />
                 </div>
 
-                {/* Mobil Kart */}
+                {/* Masaüstü Seçili Kart (Sağ Alta Sabitlendi) */}
                 {selectedEczane && (
-                    <div className="absolute bottom-6 left-4 right-4 z-[1000] md:hidden">
-                        <div className="bg-white p-5 rounded-3xl shadow-2xl border border-red-100 animate-in slide-in-from-bottom duration-300">
+                    <div className="absolute bottom-8 right-8 z-[1000] w-80 hidden md:block">
+                        <div className="bg-white p-6 rounded-[2rem] shadow-2xl border border-slate-100">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <h2 className="font-bold text-lg text-slate-900">{selectedEczane.Adi}</h2>
-                                    <p className="text-xs text-slate-500">{selectedEczane.Adres}</p>
+                                    <h2 className="font-bold text-xl text-slate-900">{selectedEczane.Adi}</h2>
+                                    <p className="text-xs text-slate-500 mt-1 uppercase font-bold tracking-wider">{selectedEczane.Bolge}</p>
                                 </div>
-                                <button onClick={() => setSelectedEczane(null)} className="p-1 text-slate-400">✕</button>
+                                <button onClick={() => setSelectedEczane(null)} className="text-slate-300 hover:text-slate-500">✕</button>
                             </div>
+                            <p className="text-xs text-slate-600 mb-6 leading-relaxed italic">"{selectedEczane.Adres}"</p>
                             <div className="flex gap-2">
-                                <a href={`tel:${selectedEczane.Telefon}`} className="flex-1 bg-red-600 text-white text-center py-3 rounded-xl font-bold text-sm">Ara</a>
+                                <a href={`tel:${selectedEczane.Telefon}`} className="flex-1 bg-red-600 text-white text-center py-3 rounded-xl font-bold text-xs">ARA</a>
                                 <button
                                     onClick={() => window.open(`https://www.google.com/maps?q=${selectedEczane.LokasyonX},${selectedEczane.LokasyonY}`)}
-                                    className="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold text-sm"
+                                    className="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-xs"
                                 >
-                                    Yol Tarifi
+                                    TARİF
                                 </button>
                             </div>
                         </div>
