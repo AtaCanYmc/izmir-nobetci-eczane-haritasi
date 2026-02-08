@@ -33,3 +33,11 @@ export const handleResponse = (response: Response) => {
     }
     return response.json();
 }
+
+export const openEczaneOnMap = (eczane: Eczane) => {
+    window.open(`https://www.google.com/maps?q=${eczane.LokasyonX},${eczane.LokasyonY}`)
+};
+
+export const callEczane = (eczane: Eczane) => {
+    window.location.href = `tel:${eczane.Telefon}`;
+};
