@@ -4,6 +4,7 @@ import type {Eczane} from "../types/eczane.ts";
 import {PharmacyMap} from "../components/map/pharmacyMap.tsx";
 import logo from '../assets/eczane_logo.jpg';
 import {Menu, ChevronLeft} from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const PharmacyPage = () => {
     const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
@@ -18,8 +19,13 @@ const PharmacyPage = () => {
                 setLoading(true);
                 const data = await fetchNobetciEczaneler();
                 setEczaneler(data);
+                toast.success('Eczaneler güncellendi');
             } catch (error) {
                 console.error("Veri çekme hatası:", error);
+                toast.error('Eczane listesi alınamadı. Lütfen internetinizi kontrol edin.', {
+                    duration: 5000, // 5 saniye görünsün
+                    position: 'top-center',
+                });
             } finally {
                 setLoading(false);
             }
@@ -178,6 +184,7 @@ const PharmacyPage = () => {
 
     return (
         <div className="flex h-[100dvh] w-full overflow-hidden bg-white relative font-sans">
+            <Toaster />
             {getSidebarToggleButton(false)}
 
             {/* SIDEBAR */}
