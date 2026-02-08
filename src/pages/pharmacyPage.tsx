@@ -5,6 +5,7 @@ import {PharmacyMap} from "../components/map/pharmacyMap.tsx";
 import logo from '../assets/eczane_logo.jpg';
 import {Menu, ChevronLeft} from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import Footer from "../components/footer/footer.tsx";
 
 const PharmacyPage = () => {
     const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
@@ -202,6 +203,7 @@ const PharmacyPage = () => {
                 <div className="sidebar-content h-full flex flex-col">
                     {getAsideHeader()}
                     {getAsideEczaneList()}
+                    <Footer />
                 </div>
             </aside>
 
