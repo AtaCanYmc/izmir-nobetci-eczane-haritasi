@@ -2,7 +2,7 @@ import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-export const DefaultIcon = L.icon({
+const DefaultIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
     iconSize: [25, 41],
@@ -11,7 +11,7 @@ export const DefaultIcon = L.icon({
     shadowSize: [41, 41]
 });
 
-export const SelectedIcon = L.icon({
+const SelectedIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
     shadowUrl: markerShadow,
     iconSize: [25, 41],
@@ -20,7 +20,7 @@ export const SelectedIcon = L.icon({
     shadowSize: [41, 41]
 });
 
-export const userIcon = L.divIcon({
+const userIcon = L.divIcon({
     className: 'user-location-marker',
     html: `
     <div class="relative flex items-center justify-center">
@@ -29,5 +29,8 @@ export const userIcon = L.divIcon({
     </div>
   `,
     iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    iconAnchor: [16, 16]
 });
+
+// eslint-disable-next-line react-refresh/only-export-components
+export {userIcon, DefaultIcon, SelectedIcon};
