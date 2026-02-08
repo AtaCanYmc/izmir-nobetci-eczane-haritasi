@@ -1,4 +1,4 @@
-import type {Eczane} from "../types/eczane.ts";
+import type {Eczane} from "../../types/eczane.ts";
 import {useMap} from "react-leaflet";
 import {useEffect} from "react";
 

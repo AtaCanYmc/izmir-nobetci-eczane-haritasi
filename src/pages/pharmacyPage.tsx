@@ -1,7 +1,7 @@
 import {useEffect, useState, useMemo} from 'react';
 import {fetchNobetciEczaneler, openEczaneOnMap} from "../services/api";
 import type {Eczane} from "../types/eczane.ts";
-import {PharmacyMap} from "../components/pharmacyMap.tsx";
+import {PharmacyMap} from "../components/map/pharmacyMap.tsx";
 import logo from '../assets/eczane_logo.jpg';
 
 const PharmacyPage = () => {

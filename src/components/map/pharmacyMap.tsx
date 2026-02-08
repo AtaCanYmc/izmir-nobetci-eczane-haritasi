@@ -2,11 +2,11 @@ import {useEffect, useState} from 'react';
 import {MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L, {type LeafletEventHandlerFnMap} from 'leaflet';
-import type {Eczane} from "../types/eczane.ts";
-import {formatDate} from "../utils/dateUtils.ts";
+import type {Eczane} from "../../types/eczane.ts";
+import {formatDate} from "../../utils/dateUtils.ts";
 import MapController from "./mapController.tsx";
 import {DefaultIcon, SelectedIcon, userIcon} from "./mapIcons.tsx";
-import {callEczane, openEczaneOnMap} from "../services/api.ts";
+import {callEczane, openEczaneOnMap} from "../../services/api.ts";
 
 // Varsayılan ikonu ayarla
 L.Marker.prototype.options.icon = DefaultIcon;
