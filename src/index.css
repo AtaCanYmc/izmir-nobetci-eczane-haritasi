@@ -9,6 +9,17 @@
     color: black;
 }
 
+.sidebar-content {
+    width: 380px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .sidebar-content {
+        width: 320px;
+    }
+}
+
 html, body, #root {
     height: 100vh;
     width: 100vw;

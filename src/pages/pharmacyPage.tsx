@@ -3,12 +3,14 @@ import {fetchNobetciEczaneler, openEczaneOnMap} from "../services/api";
 import type {Eczane} from "../types/eczane.ts";
 import {PharmacyMap} from "../components/map/pharmacyMap.tsx";
 import logo from '../assets/eczane_logo.jpg';
+import {Menu, ChevronLeft} from 'lucide-react';
 
 const PharmacyPage = () => {
     const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedEczane, setSelectedEczane] = useState<Eczane | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
@@ -63,6 +65,30 @@ const PharmacyPage = () => {
             </div>
         </div>
     );
+
+    const getSidebarToggleButton = (isMobile: boolean) => {
+        if (isMobile) {
+            return (
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="md:hidden absolute top-4 right-4 z-[9999] bg-white p-3 rounded-2xl shadow-xl border border-slate-100 text-red-600"
+                >
+                    <Menu size={24}/>
+                </button>
+            );
+        }
+
+        return (
+            <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className={`absolute top-4 z-[1002] bg-white p-3 rounded-2xl shadow-xl border border-slate-100 text-red-600 transition-all duration-300 ${
+                    isSidebarOpen ? 'left-[390px]' : 'left-4'
+                } md:flex hidden`} // Masaüstü için
+            >
+                {isSidebarOpen ? <ChevronLeft size={24}/> : <Menu size={24}/>}
+            </button>
+        );
+    };
 
     const getAsideEczaneList = () => (
         <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/30">
@@ -151,26 +177,42 @@ const PharmacyPage = () => {
     };
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-white">
-            {/* SIDEBAR (SOL PANEL) */}
-            {/* md:flex ile webde görünür kılıp, w-[380px] ile sabit bir genişlik verdik */}
+        <div className="flex h-[100dvh] w-full overflow-hidden bg-white relative font-sans">
+            {getSidebarToggleButton(false)}
+
+            {/* SIDEBAR */}
             <aside
-                className="hidden md:flex flex-col w-[380px] h-full border-r border-slate-200 bg-white z-20 shrink-0 shadow-2xl">
-                {getAsideHeader()}
-                {getAsideEczaneList()}
+                className={`
+                fixed md:relative z-[1010] h-full bg-white border-r border-slate-200 
+                transition-[width,transform] duration-300 ease-in-out flex flex-col overflow-hidden
+                ${isSidebarOpen
+                    ? 'w-[320px] md:w-[380px] translate-x-0'
+                    : 'w-0 -translate-x-full md:translate-x-0 md:w-0'
+                }
+            `}
+            >
+                {/* Sidebar İçeriği */}
+                <div className="sidebar-content h-full flex flex-col">
+                    {getAsideHeader()}
+                    {getAsideEczaneList()}
+                </div>
             </aside>
 
-            {/* HARİTA ALANI (SAĞ PANEL) */}
-            {/* flex-1 sayesinde sidebar'dan kalan tüm alanı kaplar */}
-            <main className="flex-1 relative bg-slate-100">
-                {/* Yükleme Ekranı */}
+            {/* MOBİL KARARTMA KATMANI */}
+            <div
+                className={`
+                md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[1005] transition-opacity duration-300
+                ${isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+            `}
+                onClick={() => setIsSidebarOpen(false)}
+            />
+
+            {/* ANA İÇERİK (HARİTA) */}
+            <main className="flex-1 relative bg-slate-100 h-full overflow-hidden">
                 {getLoading()}
-
-                {/* Harita */}
                 {getEczaneMap()}
-
-                {/* Masaüstü Seçili Kart (Sağ Alta Sabitlendi) */}
                 {getSelectedEczaneCard()}
+                {getSidebarToggleButton(true)}
             </main>
         </div>
     );
