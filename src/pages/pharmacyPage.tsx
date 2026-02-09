@@ -41,7 +41,16 @@ const PharmacyPage = () => {
         // Kullanıcının konum izni durumunu kontrol et
         navigator.permissions?.query({name: 'geolocation'}).then((result) => {
             setLocationStatus(result.state);
-            result.onchange = () => setLocationStatus(result.state);
+            result.onchange = () => {
+                setLocationStatus(result.state);
+                // Eğer izin verildiyse uyarıyı kapat, reddedildiyse göster
+                if (result.state === 'granted') {
+                    setShowLocationWarning(false);
+                    window.location.reload();
+                } else {
+                    setShowLocationWarning(true);
+                }
+            }
         });
     }, []);
 
