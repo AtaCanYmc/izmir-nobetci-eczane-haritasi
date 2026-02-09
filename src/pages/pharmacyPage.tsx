@@ -3,8 +3,8 @@ import {fetchNobetciEczaneler, openEczaneOnMap} from "../services/api";
 import type {Eczane} from "../types/eczane.ts";
 import {PharmacyMap} from "../components/map/pharmacyMap.tsx";
 import logo from '../assets/eczane_logo.jpg';
-import {Menu, ChevronLeft} from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
+import {Menu, ChevronLeft, MapPinOff, X} from 'lucide-react';
+import toast, {Toaster} from 'react-hot-toast';
 import Footer from "../components/footer/footer.tsx";
 
 const PharmacyPage = () => {
@@ -13,6 +13,8 @@ const PharmacyPage = () => {
     const [selectedEczane, setSelectedEczane] = useState<Eczane | null>(null);
     const [loading, setLoading] = useState(true);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [locationStatus, setLocationStatus] = useState<'prompt' | 'granted' | 'denied'>('prompt');
+    const [showLocationWarning, setShowLocationWarning] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
@@ -31,7 +33,15 @@ const PharmacyPage = () => {
                 setLoading(false);
             }
         };
+
+        // Verileri yükle
         loadData().then(r => r);
+
+        // Kullanıcının konum izni durumunu kontrol et
+        navigator.permissions?.query({name: 'geolocation'}).then((result) => {
+            setLocationStatus(result.state);
+            result.onchange = () => setLocationStatus(result.state);
+        });
     }, []);
 
     const filteredEczaneler = useMemo(() => {
@@ -40,6 +50,62 @@ const PharmacyPage = () => {
             e.Bolge.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [eczaneler, searchTerm]);
+
+
+    // ------------------------ UI BÖLÜMÜ ------------------------
+
+    const getLocationWarning = () => {
+        // Eğer konum reddedilmemişse VEYA kullanıcı zaten popup'ı kapattıysa gösterme
+        if (locationStatus !== 'denied' || !showLocationWarning) return null;
+
+        return (
+            <div
+                className="absolute top-20 left-4 right-4 md:left-auto md:right-8 md:w-80 z-[2000] animate-in fade-in slide-in-from-top-4">
+                <div
+                    className="bg-white/95 backdrop-blur-md p-5 rounded-[2rem] shadow-2xl border border-red-100 relative group">
+
+                    {/* KAPATMA BUTONU */}
+                    <button
+                        onClick={() => setShowLocationWarning(false)}
+                        className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100 transition-colors"
+                    >
+                        <X size={18}/>
+                    </button>
+
+                    <div className="flex items-start gap-4 pr-6"> {/* pr-6 butona çarpmaması için */}
+                        <div className="bg-red-50 p-3 rounded-2xl text-red-600">
+                            <MapPinOff size={24}/>
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="font-bold text-slate-900 text-sm">Konum Erişimi Kapalı</h4>
+                            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                                Size en yakın eczaneleri göstermemiz için konum izni vermeniz gerekiyor.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 p-3 bg-slate-50 rounded-2xl">
+                        <p className="text-[10px] text-slate-600 font-semibold mb-2 uppercase tracking-wider">
+                            iPhone (Safari) için:
+                        </p>
+                        <p className="text-[10px] text-slate-500 leading-tight">
+                            Adres çubuğundaki <span className="font-bold">"AA"</span> veya <span
+                            className="font-bold">"Kilit"</span> ikonuna basıp <span className="font-bold">"Web Sitesi Ayarları"</span> kısmından
+                            Konum'a "İzin Ver" demelisiniz.
+                        </p>
+                    </div>
+
+                    {/* Alternatif: Ayarları açamadığı durumlar için Tekrar Dene butonu */}
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="w-full mt-3 py-2 text-[10px] font-bold text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors"
+                    >
+                        AYARLARI YAPTIM, SAYFAYI YENİLE
+                    </button>
+                </div>
+            </div>
+        );
+    };
 
     const getIconAndTitle = () => {
         return (
@@ -185,7 +251,7 @@ const PharmacyPage = () => {
 
     return (
         <div className="flex h-[100dvh] w-full overflow-hidden bg-white relative font-sans">
-            <Toaster />
+            <Toaster/>
             {getSidebarToggleButton(false)}
 
             {/* SIDEBAR */}
@@ -203,7 +269,7 @@ const PharmacyPage = () => {
                 <div className="sidebar-content h-full flex flex-col">
                     {getAsideHeader()}
                     {getAsideEczaneList()}
-                    <Footer />
+                    <Footer/>
                 </div>
             </aside>
 
@@ -222,6 +288,7 @@ const PharmacyPage = () => {
                 {getEczaneMap()}
                 {getSelectedEczaneCard()}
                 {getSidebarToggleButton(true)}
+                {getLocationWarning()}
             </main>
         </div>
     );
