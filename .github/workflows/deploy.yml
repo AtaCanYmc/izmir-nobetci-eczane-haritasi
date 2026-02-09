@@ -59,6 +59,9 @@ jobs:
         with:
           path: "./dist"
 
+      - name: Wait before deploy
+        run: sleep 60
+
   # 3. AŞAMA: DEPLOY
   deploy:
     needs: build
