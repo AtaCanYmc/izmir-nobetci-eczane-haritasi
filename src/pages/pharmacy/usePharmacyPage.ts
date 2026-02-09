@@ -35,7 +35,7 @@ const usePharmacyPage = () => {
         // 1. Standart Permissions API kontrolü (Chrome, Firefox, Edge)
         if (navigator.permissions && navigator.permissions.query) {
             try {
-                const result = await navigator.permissions.query({ name: 'geolocation' });
+                const result = await navigator.permissions.query({name: 'geolocation'});
                 handleStatusChange(result.state);
                 result.onchange = () => handleStatusChange(result.state);
                 return;
@@ -66,14 +66,21 @@ const usePharmacyPage = () => {
         }
     };
 
+    const handleRetryLocationPermission = () => {
+        // Kullanıcıya konum izni vermesi için tekrar deneme fırsatı sunar
+        setShowLocationWarning(false);
+        checkLocationPermission().then(r => r);
+    };
+
     useEffect(() => {
-            // Verileri yükle
-            loadData().then(r => r);
+        // Verileri yükle
+        loadData().then(r => r);
 
-            // Kullanıcının konum izni durumunu kontrol et
+        // Kullanıcının konum izni durumunu kontrol et
+        setInterval(() => {
             checkLocationPermission().then(r => r);
-
-        }, []);
+        }, 1000 * 5); // Her 5 saniyede bir kontrol et
+    }, []);
 
     const filteredEczaneler = useMemo(() => {
         return eczaneler.filter(e =>
@@ -93,7 +100,8 @@ const usePharmacyPage = () => {
         setIsSidebarOpen,
         locationStatus,
         showLocationWarning,
-        setShowLocationWarning
+        setShowLocationWarning,
+        handleRetryLocationPermission
     };
 };
 

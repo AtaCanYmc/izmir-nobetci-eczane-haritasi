@@ -19,7 +19,8 @@ const PharmacyPage = () => {
         setIsSidebarOpen,
         locationStatus,
         showLocationWarning,
-        setShowLocationWarning
+        setShowLocationWarning,
+        handleRetryLocationPermission
     } = usePharmacyPage();
 
     // ------------------------ UI BÖLÜMÜ ------------------------
@@ -67,10 +68,10 @@ const PharmacyPage = () => {
 
                     {/* Alternatif: Ayarları açamadığı durumlar için Tekrar Dene butonu */}
                     <button
-                        onClick={() => window.location.reload()}
+                        onClick={() => handleRetryLocationPermission()}
                         className="w-full mt-3 py-2 text-[10px] font-bold text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors"
                     >
-                        AYARLARI YAPTIM, SAYFAYI YENİLE
+                        Ayarları Tamamladım, Tekrar Dene
                     </button>
                 </div>
             </div>
