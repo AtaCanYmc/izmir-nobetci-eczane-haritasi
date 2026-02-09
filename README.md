@@ -53,7 +53,7 @@ Bu proje, İzmir Büyükşehir Belediyesi'nin verilerini kullanarak tüm nöbet�
 - **Veri Kaynağı:** İzmir Büyükşehir Belediyesi Açık Veri Portalı API
 
 ## 🔗 Canlı Uygulama
-Uygulamayı buradan inceleyebilirsiniz: [izmir-nobetci-eczane-haritasi.live](https://izmir-nobetci-eczane-haritasi.live)
+Uygulamayı buradan inceleyebilirsiniz: [izmirnobetcieczaneharitasi.live](https://izmirnobetcieczaneharitasi.live)
 
 ## 🚀 Kendi Versiyonunuzu Çalıştırma
 
