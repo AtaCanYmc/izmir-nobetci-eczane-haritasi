@@ -1,66 +1,26 @@
-import {useEffect, useState, useMemo} from 'react';
-import {fetchNobetciEczaneler, openEczaneOnMap} from "../services/api";
-import type {Eczane} from "../types/eczane.ts";
-import {PharmacyMap} from "../components/map/pharmacyMap.tsx";
-import logo from '../assets/eczane_logo.jpg';
+import {openEczaneOnMap} from "../../services/api.ts";
+import {PharmacyMap} from "../../components/map/pharmacyMap.tsx";
+import logo from '../../assets/eczane_logo.jpg';
 import {Menu, ChevronLeft, MapPinOff, X} from 'lucide-react';
-import toast, {Toaster} from 'react-hot-toast';
-import Footer from "../components/footer/footer.tsx";
+import {Toaster} from 'react-hot-toast';
+import Footer from "../../components/footer/footer.tsx";
 import {Helmet} from 'react-helmet-async';
+import usePharmacyPage from "./usePharmacyPage.ts";
 
 const PharmacyPage = () => {
-    const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedEczane, setSelectedEczane] = useState<Eczane | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const [locationStatus, setLocationStatus] = useState<'prompt' | 'granted' | 'denied'>('prompt');
-    const [showLocationWarning, setShowLocationWarning] = useState(true);
-
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchNobetciEczaneler();
-                setEczaneler(data);
-                toast.success('Eczaneler güncellendi');
-            } catch (error) {
-                console.error("Veri çekme hatası:", error);
-                toast.error('Eczane listesi alınamadı. Lütfen internetinizi kontrol edin.', {
-                    duration: 5000, // 5 saniye görünsün
-                    position: 'top-center',
-                });
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        // Verileri yükle
-        loadData().then(r => r);
-
-        // Kullanıcının konum izni durumunu kontrol et
-        navigator.permissions?.query({name: 'geolocation'}).then((result) => {
-            setLocationStatus(result.state);
-            result.onchange = () => {
-                setLocationStatus(result.state);
-                // Eğer izin verildiyse uyarıyı kapat, reddedildiyse göster
-                if (result.state === 'granted') {
-                    setShowLocationWarning(false);
-                    window.location.reload();
-                } else {
-                    setShowLocationWarning(true);
-                }
-            }
-        });
-    }, []);
-
-    const filteredEczaneler = useMemo(() => {
-        return eczaneler.filter(e =>
-            e.Adi.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            e.Bolge.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [eczaneler, searchTerm]);
-
+    const {
+        eczaneler,
+        searchTerm,
+        setSearchTerm,
+        selectedEczane,
+        setSelectedEczane,
+        loading,
+        isSidebarOpen,
+        setIsSidebarOpen,
+        locationStatus,
+        showLocationWarning,
+        setShowLocationWarning
+    } = usePharmacyPage();
 
     // ------------------------ UI BÖLÜMÜ ------------------------
 
@@ -180,7 +140,7 @@ const PharmacyPage = () => {
                     Yükleniyor...
                 </div>
             ) : (
-                filteredEczaneler.map((eczane) => (
+                eczaneler.map((eczane) => (
                     <div
                         key={`${eczane.Adi}-${eczane.LokasyonX}`}
                         onClick={() => setSelectedEczane(eczane)}
@@ -240,7 +200,7 @@ const PharmacyPage = () => {
     const getEczaneMap = () => (
         <div className="absolute inset-0 h-full w-full">
             <PharmacyMap
-                eczaneler={filteredEczaneler}
+                eczaneler={eczaneler}
                 selectedEczane={selectedEczane}
                 onMarkerClick={setSelectedEczane}
             />
