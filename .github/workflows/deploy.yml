@@ -24,7 +24,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # TypeScript kontrol
       - name: Type Check
@@ -49,7 +49,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build project
         run: npm run build
