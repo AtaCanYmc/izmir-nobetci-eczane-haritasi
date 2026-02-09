@@ -1,9 +1,12 @@
 import PharmacyPage from "./pages/pharmacyPage.tsx";
+import {HelmetProvider} from "react-helmet-async";
 
 function App() {
     return (
         <>
-            <PharmacyPage/>
+            <HelmetProvider>
+                <PharmacyPage/>
+            </HelmetProvider>
         </>
     )
 }

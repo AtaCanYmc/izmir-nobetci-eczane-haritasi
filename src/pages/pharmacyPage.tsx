@@ -6,6 +6,7 @@ import logo from '../assets/eczane_logo.jpg';
 import {Menu, ChevronLeft, MapPinOff, X} from 'lucide-react';
 import toast, {Toaster} from 'react-hot-toast';
 import Footer from "../components/footer/footer.tsx";
+import {Helmet} from 'react-helmet-async';
 
 const PharmacyPage = () => {
     const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
@@ -118,7 +119,7 @@ const PharmacyPage = () => {
                         Nöbetçi Eczane Listesi
                     </p>
                 </div>
-                <img src={logo} alt="E" className="w-12 h-12"/>
+                <img src={logo} alt="İzmir Nöbetçi Eczane Logosu" className="w-12 h-12"/>
             </div>
         );
     };
@@ -251,7 +252,18 @@ const PharmacyPage = () => {
 
     return (
         <div className="flex h-[100dvh] w-full overflow-hidden bg-white relative font-sans">
+            {/* SEO için Helmet kullanarak başlık ve meta açıklama ekliyoruz */}
+            <Helmet>
+                <title>İzmir Nöbetçi Eczaneler | Canlı Harita ve Liste</title>
+                <meta name="description"
+                      content="İzmir'deki tüm güncel nöbetçi eczaneleri harita üzerinde görün, yol tarifi alın ve tek tıkla arayın."/>
+                <meta name="keywords" content="izmir nöbetçi eczane, eczane haritası, nöbetçi eczaneler bugün"/>
+            </Helmet>
+
+            { /* TOASTER (Bildirimler için) */}
             <Toaster/>
+
+            { /* WEB AÇMA/KAPAMA BUTONU */}
             {getSidebarToggleButton(false)}
 
             {/* SIDEBAR */}
