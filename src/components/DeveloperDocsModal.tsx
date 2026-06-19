@@ -10,7 +10,7 @@ export const DeveloperDocsModal = ({ isOpen, onClose }: DeveloperDocsModalProps)
 
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 m-4 relative animate-in zoom-in-95">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 m-4 relative animate-in zoom-in-95">
                 <button
                     onClick={onClose}
                     className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -45,7 +45,7 @@ export const DeveloperDocsModal = ({ isOpen, onClose }: DeveloperDocsModalProps)
                                 <Terminal size={16} className="text-slate-500" />
                                 <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">Kurulum</span>
                             </div>
-                            <div className="p-4 bg-slate-900 text-slate-50 overflow-x-auto">
+                            <div className="p-4 bg-slate-900 text-slate-50 overflow-x-auto no-scrollbar">
                                 <pre className="font-mono text-xs"><code>npm install izmir-open-data-js</code></pre>
                             </div>
                         </div>
@@ -55,7 +55,7 @@ export const DeveloperDocsModal = ({ isOpen, onClose }: DeveloperDocsModalProps)
                                 <Code size={16} className="text-slate-500" />
                                 <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">Örnek Kullanım</span>
                             </div>
-                            <div className="p-4 bg-slate-900 text-slate-50 overflow-x-auto">
+                            <div className="p-4 bg-slate-900 text-slate-50 overflow-x-auto no-scrollbar">
                                 <pre className="font-mono text-xs leading-relaxed"><code>{`import { IzmirAPI } from "izmir-open-data-js";
 
 // İstemciyi oluşturun
