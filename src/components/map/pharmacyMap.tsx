@@ -25,7 +25,11 @@ interface PharmacyMapProps {
     onMarkerClick?: (eczane: Eczane) => void;
 }
 
+import { useTheme } from "../../contexts/ThemeContext.tsx";
+
+// (Inside PharmacyMap Component)
 export const PharmacyMap = (props: PharmacyMapProps) => {
+    const { theme } = useTheme();
     const {eczaneler, selectedEczane, onMarkerClick} = props;
     const izmirMerkez: [number, number] = [38.4237, 27.1428];
     const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -108,12 +112,12 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
                 <div className="leaflet-control">
                     <button
                         onClick={handleClick}
-                        className="bg-white p-3 rounded-xl shadow-2xl border-2 border-slate-200 hover:bg-slate-50 transition-all active:scale-90 group"
+                        className="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-90 group"
                         title="Konumuma Dön"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`w-6 h-6 ${userLocation ? 'text-blue-600' : 'text-slate-400'}`}
+                            className={`w-6 h-6 ${userLocation ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'}`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -146,17 +150,20 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
         }
     }, []);
 
+    const tileUrl = theme === 'dark' 
+        ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+
     return (
-        <div className="h-full w-full relative z-0 min-h-[100vh]">
+        <div className="h-full w-full relative z-0 min-h-[100vh] transition-colors">
             <MapContainer
                 center={izmirMerkez}
                 zoom={11}
                 style={{height: '100%', width: '100%'}}
                 zoomControl={false}
             >
-                {/* Daha hızlı ve modern tile layer */}
                 <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                    url={tileUrl}
                     attribution='&copy; OpenStreetMap'
                 />
 

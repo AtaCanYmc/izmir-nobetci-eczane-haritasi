@@ -4,9 +4,12 @@
     --color-primary: #dc2626; /* Kırmızı rengimiz */
 }
 
-:root {
-    background-color: white !important;
-    color: black;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .sidebar-content {

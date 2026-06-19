@@ -1,0 +1,10 @@
+/* TEAM */
+Developer: Ata Can Yaymacı
+GitHub: https://github.com/AtaCanYmc
+Location: İzmir, Turkey
+
+/* SITE */
+Last update: 2026/06/19
+Standards: HTML5, CSS3, React, TailwindCSS
+Components: React Leaflet
+Software: Vite, TypeScript
