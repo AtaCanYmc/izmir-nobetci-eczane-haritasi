@@ -1,13 +1,15 @@
 import {PharmacyMap} from "../../components/map/pharmacyMap.tsx";
 import logo from '../../assets/eczane_logo.jpg';
-import {Menu, ChevronLeft, MapPinOff, X, Moon, Sun, Code} from 'lucide-react';
-import {Toaster} from 'react-hot-toast';
+import {Menu, ChevronLeft, MapPinOff, X, Moon, Sun, Code, Download} from 'lucide-react';
+import {Toaster, toast} from 'react-hot-toast';
 import Footer from "../../components/footer/footer.tsx";
 import {Helmet} from 'react-helmet-async';
 import usePharmacyPage from "./usePharmacyPage.ts";
 import { PharmacyDetailsCard } from "../../components/map/PharmacyDetailsCard.tsx";
 import { DeveloperDocsModal } from "../../components/DeveloperDocsModal.tsx";
-import { useState } from "react";
+import { DownloadModal } from "../../components/DownloadModal.tsx";
+import html2canvas from 'html2canvas';
+import { useRef, useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext.tsx";
 import { useAnalytics } from "../../hooks/useAnalytics.ts";
 
@@ -31,6 +33,49 @@ const PharmacyPage = () => {
     const { theme, toggleTheme } = useTheme();
     const { trackEvent } = useAnalytics();
     const [isDocsOpen, setIsDocsOpen] = useState(false);
+    const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+    const mapContainerRef = useRef<HTMLDivElement>(null);
+
+    const handleDownloadPNG = async () => {
+        if (!mapContainerRef.current) {
+            toast.error('Harita yüklenemedi');
+            return;
+        }
+
+        const loadingToast = toast.loading('Harita indiriliyor...');
+
+        try {
+            const leafletContainer = mapContainerRef.current.querySelector('.leaflet-container') as HTMLElement;
+            if (!leafletContainer) {
+                throw new Error("Harita container'ı bulunamadı");
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const canvas = await html2canvas(leafletContainer, {
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: theme === 'dark' ? '#0f172a' : '#ffffff',
+                scale: 1,
+                logging: false,
+                removeContainer: false,
+                foreignObjectRendering: false,
+                ignoreElements: (element) => element.tagName === 'svg' || element.tagName === 'iframe',
+            });
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `izmir-nobetci-eczaneler-${new Date().toISOString().split('T')[0]}.png`;
+            link.click();
+
+            toast.dismiss(loadingToast);
+            toast.success('Harita başarıyla indirildi!');
+        } catch (error) {
+            console.error('Harita indirme hatası:', error);
+            toast.dismiss(loadingToast);
+            toast.error('Harita indirme hatası. Lütfen tekrar deneyiniz.');
+        }
+    };
 
     // ------------------------ UI BÖLÜMÜ ------------------------
 
@@ -95,6 +140,16 @@ const PharmacyPage = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
+                    <button 
+                        onClick={() => {
+                            setIsDownloadOpen(true);
+                            trackEvent('open_download_modal');
+                        }}
+                        className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                        title="İndir / Dışa Aktar"
+                    >
+                        <Download size={20} />
+                    </button>
                     <button 
                         onClick={() => {
                             setIsDocsOpen(true);
@@ -203,7 +258,7 @@ const PharmacyPage = () => {
     );
 
     const getEczaneMap = () => (
-        <div className="absolute inset-0 h-full w-full bg-slate-100 dark:bg-slate-800 transition-colors">
+        <div ref={mapContainerRef} className="absolute inset-0 h-full w-full bg-slate-100 dark:bg-slate-800 transition-colors">
             <PharmacyMap
                 eczaneler={eczaneler}
                 selectedEczane={selectedEczane}
@@ -280,6 +335,13 @@ const PharmacyPage = () => {
                 {getLocationWarning()}
                 
                 <DeveloperDocsModal isOpen={isDocsOpen} onClose={() => setIsDocsOpen(false)} />
+                
+                <DownloadModal 
+                    isOpen={isDownloadOpen} 
+                    onClose={() => setIsDownloadOpen(false)} 
+                    mapPoints={eczaneler} 
+                    onDownloadPNG={handleDownloadPNG} 
+                />
             </main>
         </div>
     );
