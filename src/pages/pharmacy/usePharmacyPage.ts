@@ -1,34 +1,35 @@
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState, useEffect} from "react";
 import type {Eczane} from "../../types/eczane.ts";
 import {fetchNobetciEczaneler} from "../../services/api.ts";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 const usePharmacyPage = () => {
-    const [eczaneler, setEczaneler] = useState<Eczane[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedEczane, setSelectedEczane] = useState<Eczane | null>(null);
-    const [loading, setLoading] = useState(true);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [locationStatus, setLocationStatus] = useState<PermissionState>('prompt');
     const [showLocationWarning, setShowLocationWarning] = useState(true);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const loadData = async () => {
-        try {
-            setLoading(true);
+    const { data: eczaneler = [], isLoading: loading, isError } = useQuery({
+        queryKey: ['nobetciEczaneler'],
+        queryFn: async () => {
             const data = await fetchNobetciEczaneler();
-            setEczaneler(data);
-            toast.success('Eczaneler güncellendi');
-        } catch (error) {
-            console.error("Veri çekme hatası:", error);
+            return data;
+        },
+        staleTime: 1000 * 60 * 15, // 15 dakika staleTime
+        gcTime: 1000 * 60 * 15, // 15 dakika cacheTime (eski adıyla cacheTime, yeni adıyla gcTime)
+    });
+
+    // isError durumunu izleyerek hata mesajı göster
+    useEffect(() => {
+        if (isError) {
             toast.error('Eczane listesi alınamadı. Lütfen internetinizi kontrol edin.', {
-                duration: 5000, // 5 saniye görünsün
+                duration: 5000,
                 position: 'top-center',
             });
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [isError]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const checkLocationPermission = async () => {
@@ -73,13 +74,12 @@ const usePharmacyPage = () => {
     };
 
     useEffect(() => {
-        // Verileri yükle
-        loadData().then(r => r);
-
         // Kullanıcının konum izni durumunu kontrol et
-        setInterval(() => {
+        const intervalId = setInterval(() => {
             checkLocationPermission().then(r => r);
         }, 1000 * 5); // Her 5 saniyede bir kontrol et
+        
+        return () => clearInterval(intervalId);
     }, []);
 
     const filteredEczaneler = useMemo(() => {
@@ -96,6 +96,7 @@ const usePharmacyPage = () => {
         selectedEczane,
         setSelectedEczane,
         loading,
+        isError,
         isSidebarOpen,
         setIsSidebarOpen,
         locationStatus,
@@ -105,4 +106,4 @@ const usePharmacyPage = () => {
     };
 };
 
-export default usePharmacyPage
+export default usePharmacyPage;

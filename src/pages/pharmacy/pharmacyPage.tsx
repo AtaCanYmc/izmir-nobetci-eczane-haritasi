@@ -1,4 +1,3 @@
-import {openEczaneOnMap} from "../../services/api.ts";
 import {PharmacyMap} from "../../components/map/pharmacyMap.tsx";
 import logo from '../../assets/eczane_logo.jpg';
 import {Menu, ChevronLeft, MapPinOff, X} from 'lucide-react';
@@ -6,6 +5,7 @@ import {Toaster} from 'react-hot-toast';
 import Footer from "../../components/footer/footer.tsx";
 import {Helmet} from 'react-helmet-async';
 import usePharmacyPage from "./usePharmacyPage.ts";
+import { PharmacyDetailsCard } from "../../components/map/PharmacyDetailsCard.tsx";
 
 const PharmacyPage = () => {
     const {
@@ -15,6 +15,7 @@ const PharmacyPage = () => {
         selectedEczane,
         setSelectedEczane,
         loading,
+        isError,
         isSidebarOpen,
         setIsSidebarOpen,
         locationStatus,
@@ -140,6 +141,15 @@ const PharmacyPage = () => {
                 <div className="flex flex-col items-center justify-center h-40 text-slate-400 animate-pulse italic">
                     Yükleniyor...
                 </div>
+            ) : isError ? (
+                <div className="flex flex-col items-center justify-center h-40 text-red-500 text-center px-4">
+                    <p className="font-bold">Veri bulunamadı veya servis geçici olarak kapalı.</p>
+                    <p className="text-xs text-red-400 mt-2">Lütfen daha sonra tekrar deneyin.</p>
+                </div>
+            ) : eczaneler.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-40 text-slate-400 text-center px-4">
+                    <p>Arama kriterlerinize uygun eczane bulunamadı.</p>
+                </div>
             ) : (
                 eczaneler.map((eczane) => (
                     <div
@@ -165,38 +175,6 @@ const PharmacyPage = () => {
             )}
         </div>
     );
-
-
-    const getSelectedEczaneCard = () => {
-        if (!selectedEczane) return null;
-
-        return (
-            <div className="absolute bottom-8 right-8 z-[1000] w-80 hidden md:block">
-                <div className="bg-white p-6 rounded-[2rem] shadow-2xl border border-slate-100">
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <h2 className="font-bold text-xl text-slate-900">{selectedEczane.Adi}</h2>
-                            <p className="text-xs text-slate-500 mt-1 uppercase font-bold tracking-wider">{selectedEczane.Bolge}</p>
-                        </div>
-                        <button onClick={() => setSelectedEczane(null)}
-                                className="text-slate-300 hover:text-slate-500">✕
-                        </button>
-                    </div>
-                    <p className="text-xs text-slate-600 mb-6 leading-relaxed italic">"{selectedEczane.Adres}"</p>
-                    <div className="flex gap-2">
-                        <a href={`tel:${selectedEczane.Telefon}`}
-                           className="flex-1 bg-red-600 text-white text-center py-3 rounded-xl font-bold text-xs">ARA</a>
-                        <button
-                            onClick={() => openEczaneOnMap(selectedEczane)}
-                            className="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-xs"
-                        >
-                            YOL TARİFİ
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    };
 
     const getEczaneMap = () => (
         <div className="absolute inset-0 h-full w-full">
@@ -268,7 +246,12 @@ const PharmacyPage = () => {
             <main className="flex-1 relative bg-slate-100 h-full overflow-hidden">
                 {getLoading()}
                 {getEczaneMap()}
-                {getSelectedEczaneCard()}
+                
+                <PharmacyDetailsCard 
+                    selectedEczane={selectedEczane} 
+                    setSelectedEczane={setSelectedEczane} 
+                />
+
                 {getSidebarToggleButton(true)}
                 {getLocationWarning()}
             </main>
