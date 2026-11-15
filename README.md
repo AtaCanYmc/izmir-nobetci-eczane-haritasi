@@ -1,118 +1,197 @@
 <div align="center">
-  <img src="public/web-app-manifest-192x192.png" alt="İzmir Nöbetçi Eczane Haritası Logo" width="120" height="120" />
-  
-  # 📍 İzmir Nöbetçi Eczane Haritası
-  
-  **İzmir genelindeki nöbetçi eczaneleri ilçe sınırlarına bağlı kalmaksızın, kullanıcıyı merkeze alan bir deneyimle sunan modern bir web uygulamasıdır.**
+  <img src="public/web-app-manifest-192x192.png" alt="İzmir Nöbetçi Eczane Haritası Logo" width="100" height="100" />
+
+  # İzmir Nöbetçi Eczane Haritası
+
+  **İzmir genelindeki nöbetçi eczaneleri ilçe idari sınırlarına bağlı kalmaksızın kullanıcı konumuna göre harita üzerinde sunan Progressive Web App (PWA).**
 
   <p align="center">
-    <a href="https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/actions/workflows/deploy.yml"><img src="https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/actions/workflows/deploy.yml/badge.svg" alt="Build & Deploy" /></a>
-    <img src="https://img.shields.io/badge/PWA-Ready-orange.svg?style=flat-square" alt="PWA Ready" />
-    <img src="https://img.shields.io/badge/React-18-blue.svg?style=flat-square&logo=react" alt="React 18" />
-    <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4.svg?style=flat-square&logo=tailwindcss" alt="Tailwind CSS" />
-    <img src="https://img.shields.io/badge/SDK-izmir--open--data--js-purple.svg?style=flat-square" alt="SDK" />
+    <a href="https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/actions/workflows/ci.yml"><img src="https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/actions/workflows/ci.yml/badge.svg" alt="CI Status" /></a>
+    <a href="https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/actions/workflows/deploy.yml"><img src="https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/actions/workflows/deploy.yml/badge.svg" alt="Deploy Status" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License" /></a>
+    <img src="https://img.shields.io/badge/React-19-blue.svg?logo=react" alt="React 19" />
+    <img src="https://img.shields.io/badge/TypeScript-5.9-blue.svg?logo=typescript" alt="TypeScript 5.9" />
+    <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4.svg?logo=tailwindcss" alt="Tailwind CSS v4" />
+    <img src="https://img.shields.io/badge/PWA-Ready-orange.svg" alt="PWA Ready" />
   </p>
 </div>
 
 ---
 
 <p align="center">
-  <img src="docs/images/eczane_detail.png" alt="Map View" width="800" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <img src="docs/images/eczane_detail.png" alt="Harita Arayüzü ve Eczane Detay Kartı" width="800" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
 </p>
 
-## 📖 Genel Bakış
+## İçindekiler
 
-Geleneksel nöbetçi eczane listeleri genellikle ilçe bazlı arama yapmayı zorunlu kılar. Ancak İzmir gibi metropollerde, özellikle **Bayraklı (Mansuroğlu)** ve **Bornova** gibi sınırların iç içe geçtiği bölgelerde, kullanıcılar hangi listenin kendilerine en uygun olduğunu bulmakta zorluk çekmektedir.
-
-Bu proje, İzmir Büyükşehir Belediyesi'nin verilerini **`izmir-open-data-js`** açık kaynak SDK'sı ile doğrudan çekerek tüm nöbetçi eczaneleri tek bir interaktif harita üzerinde toplar. İlçe seçimine gerek kalmadan, sadece konuma odaklanarak en hızlı çözüme ulaşmanızı sağlar.
+- [Genel Bakış](#genel-bakış)
+- [Sistem Mimarisi](#sistem-mimarisi)
+- [Temel Yetenekler](#temel-yetenekler)
+- [Kurulum ve Hızlı Başlangıç](#kurulum-ve-hızlı-başlangıç)
+- [Proje Dizin Yapısı](#proje-dizin-yapısı)
+- [SDK Entegrasyonu](#sdk-entegrasyonu)
+- [Teknik SSS](#teknik-sss)
+- [Katkıda Bulunma ve Yönetişim](#katkıda-bulunma-ve-yönetişim)
+- [Lisans](#lisans)
 
 ---
 
-## ✨ Öne Çıkan Özellikler
+## Genel Bakış
 
-- **📦 `izmir-open-data-js` SDK Gücü:** Proje tamamen bu kütüphane üzerine inşa edilmiştir. Ham fetch çağrıları yerine tiplendirilmiş, stabil ve profesyonel bir veri katmanı kullanılır.
-- **⚡ Akıllı Veri Yönetimi:** `TanStack Query` sayesinde eczane verileri 15 dakika boyunca akıllıca önbelleklenerek gereksiz ağ trafiği önlenir.
-- **🎨 Karanlık / Aydınlık Mod (Dark Theme):** Göz yormayan şık tasarım. Harita katmanları (`Voyager` / `Dark Matter`) temaya uygun olarak otomatik değişir.
-- **📥 Harita ve Veri İndirme (Export):** İstediğiniz eczane görünümünü **PNG** olarak indirin, veya verileri **JSON, CSV, GeoJSON** formatında cihazınıza kaydedin. Hatta internetsiz çalışabilen bir **HTML** harita kopyası bile alabilirsiniz.
-- **📍 Bölge Bağımsız & Canlı Konum:** Tüm İzmir'i tek ekranda görün. "Konumuma Dön" butonu ile mevcut yerinizi ve çevrenizdeki eczaneleri anında bulun.
-- **🔎 Hızlı Filtreleme:** Eczane adı veya bölge bazlı anlık arama desteği.
+Geleneksel nöbetçi eczane listeleri kullanıcıyı belirli bir ilçe seçmeye zorlar. Bayraklı ve Bornova veya Karşıyaka ve Çiğli gibi idari sınırların iç içe geçtiği bölgelerde ilçe bazlı sorgular kullanıcıya en yakın eczaneyi göstermeyebilir.
 
-<p align="center">
-  <img src="docs/images/pwa_web_screens.jpg" alt="Web Screens" width="800" style="border-radius: 12px;">
-</p>
+Bu proje, İzmir Büyükşehir Belediyesi Açık Veri Portalı üzerinde yayımlanan nöbetçi eczane veri akışını `izmir-open-data-js` SDK'sı üzerinden alır. Tüm nöbetçi eczaneleri tek bir koordinat düzleminde birleştirir. Kullanıcı konumuna göre en yakın sağlık noktalarına doğrudan erişim sağlar.
+
+Canlı Sürüm: [izmirnobetcieczaneharitasi.live](https://izmirnobetcieczaneharitasi.live)
 
 ---
 
-## 📱 Modern Web Yetenekleri ve SEO
+## Sistem Mimarisi
 
-- **Progressive Web App (PWA):** Uygulamayı tarayıcı üzerinden cihazınıza yükleyebilir, ana ekranınızdan bir Native App gibi ulaşabilirsiniz. 
-- **Akıllı Kurulum Asistanı:** Siteye ilk giren ziyaretçilere cihazlarına uygun kurulum adımları (Android Install Prompt veya iOS Safari yönergeleri) şık bir arayüzle sunulur.
-- **SEO & Erişilebilirlik:** `react-helmet-async` ile dinamik meta etiketleri, `sitemap.xml` ve `humans.txt` entegrasyonu ile arama motorlarında tam görünürlük.
-- **Gizlilik Odaklı Analitik:** Çerezsiz analiz araçlarıyla hangi özelliklerin daha çok kullanıldığı (örn. hangi verinin indirildiği) gizlilik ihlali olmadan takip edilir.
+Uygulama istemci tarafında çalışan tek sayfalık bir web uygulamasıdır. Veri akışı ve durum yönetimi aşağıdaki katmanlar üzerinden yürütülür:
 
-<p align="center">
-  <img src="docs/images/pwa_screens.jpg" alt="PWA Screens" width="800" style="border-radius: 12px;">
-</p>
-
----
-
-## 💻 Geliştiriciler İçin (`izmir-open-data-js`)
-
-Bu uygulama, İzmir Büyükşehir Belediyesi Açık Veri Portalı verilerini sarmalayan açık kaynaklı bir SDK olan **`izmir-open-data-js`** kullanmaktadır.
-
-Kendi projenizde kullanmak için:
-```bash
-npm install izmir-open-data-js
+```mermaid
+flowchart TD
+    User["Kullanıcı / Tarayıcı"] -->|"Coğrafi Konum API"| Client["React 19 + Leaflet Arayüzü"]
+    Client -->|"useQuery (15 dk önbellek)"| QueryLayer["TanStack Query Önbellek Katmanı"]
+    QueryLayer -->|"API İstemi"| SDK["izmir-open-data-js SDK"]
+    SDK -->|"HTTPS JSONP / REST"| IBB["İzmir BŞB Açık Veri Portalı (data.izmir.bel.tr)"]
+    IBB -->>|"Nöbetçi Eczane Veri Kümesi"| SDK
+    SDK -->>|"Tiplendirilmiş Eczane[]"| QueryLayer
+    QueryLayer -->>|"Harita Marker & Liste Çizimi"| Client
 ```
 
-```javascript
-import { IzmirAPI } from "izmir-open-data-js";
+---
 
-const api = new IzmirAPI();
-// Tüm nöbetçi eczaneleri getir
-const eczaneler = await api.eczaneler.getNobetciList();
-```
-*Daha fazla bilgi için uygulamanın sağ üst köşesindeki "Geliştiriciler İçin (< >)" butonuna tıklayabilirsiniz.*
+## Temel Yetenekler
+
+- **Konum Odaklı Harita:** Leaflet ve React-Leaflet motoru ile kullanıcının mevcut konumunu tespit eder ve çevresindeki nöbetçi eczaneleri mesafeye göre listeler.
+- **Akıllı Önbellek Yönetimi:** TanStack Query ile eczane verileri 15 dakika boyunca istemci belleğinde tutulur. Gereksiz ağ istekleri önlenir.
+- **Dinamik Harita Temaları:** Açık ve koyu renk şemasına göre `CartoDB Voyager` ve `CartoDB Dark Matter` harita katmanları otomatik olarak devreye girer.
+- **Çoklu Dışa Aktarım (Export):** Aktif harita alanını PNG görseli olarak kaydedebilir; nöbetçi eczane listesini JSON, CSV, GeoJSON veya bağımsız çalışan statik HTML formatında indirebilirsiniz.
+- **Progressive Web App (PWA):** Servis işçisi (Service Worker) altyapısı sayesinde mobil ve masaüstü tarayıcılarda ana ekrana yüklenebilir ve uygulama gibi çalışır.
+
+<p align="center">
+  <img src="docs/images/pwa_web_screens.jpg" alt="Masaüstü ve Mobil Arayüz Ekranları" width="800" style="border-radius: 12px;">
+</p>
 
 ---
 
-## 🛠️ Teknik Altyapı
+## Kurulum ve Hızlı Başlangıç
 
-- **Framework:** React 18 & TypeScript
-- **Veri ve SDK:** `izmir-open-data-js` & `@tanstack/react-query`
-- **Build Tool & PWA:** Vite & `vite-plugin-pwa`
-- **Harita Motoru:** Leaflet & React-Leaflet
-- **Styling:** Tailwind CSS v4
-- **Dışa Aktarım:** `html2canvas` (Görsel İndirme)
-- **CI/CD:** GitHub Actions (Multi-stage pipeline ile otomatik GitHub Pages deploy)
+### Gereksinimler
+- Node.js 20.x veya daha güncel sürüm
+- npm 10.x veya daha güncel sürüm
 
----
+### Adımlar
 
-## 🚀 Kendi Versiyonunuzu Çalıştırma
-
-1. Projeyi bilgisayarınıza indirin:
+1. Depoyu yerel makinenize klonlayın:
    ```bash
    git clone https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi.git
+   cd izmir-nobetci-eczane-haritasi
    ```
+
 2. Bağımlılıkları yükleyin:
    ```bash
-   cd izmir-nobetci-eczane-haritasi
    npm install
    ```
-3. Uygulamayı başlatın:
+   *Not: Depoda yer alan `.npmrc` yapılandırması bağımlılık çözümleme uyarılarını otomatik olarak yönetir.*
+
+3. Geliştirme sunucusunu başlatın:
    ```bash
    npm run dev
    ```
+   Yerel adres: `http://localhost:5173`
+
+4. Üretim paketi derleme ve doğrulama:
+   ```bash
+   npm run type-check
+   npm run build
+   ```
 
 ---
 
-## 🔗 Linkler ve Kaynaklar
-- **Canlı Uygulama:** [izmirnobetcieczaneharitasi.live](https://izmirnobetcieczaneharitasi.live)
-- **Açık Veri Portalı:** [data.izmir.bel.tr](https://data.izmir.bel.tr/)
-- **API Kaynağı:** [Nöbetçi Eczane Verisi API'si](https://data.izmir.bel.tr/dataset/izmir-nobetci-eczaneler)
+## Proje Dizin Yapısı
 
-<br/>
-<p align="center">
-  Her türlü katkıya (Pull Request veya Issue) açığım! :) <br/>
-  <i>Apache 2.0 Lisansı altında lisanslanmıştır.</i>
-</p>
+```text
+.
+├── .github/
+│   ├── ISSUE_TEMPLATE/          # Hata ve öneri formları
+│   ├── PULL_REQUEST_TEMPLATE/   # PR doğrulama şablonu
+│   └── workflows/
+│       ├── ci.yml               # Otomatik tip ve link denetimi
+│       └── deploy.yml           # GitHub Pages yayınlama hattı
+├── docs/
+│   └── images/                  # Belgelendirme ekran görüntüleri
+├── public/                      # Web manifest ve statik PWA varlıkları
+├── src/
+│   ├── assets/                  # Logo ve vektörel kaynaklar
+│   ├── components/              # Yeniden kullanılabilir arayüz parçaları
+│   │   ├── footer/              # Alt bilgi bileşeni
+│   │   └── map/                 # Leaflet harita katmanları ve marker kontrolleri
+│   ├── contexts/                # Tema durum sağlayıcısı (ThemeContext)
+│   ├── hooks/                   # Özel kancalar (useAnalytics)
+│   ├── pages/
+│   │   └── pharmacy/            # Ana sayfa ve eczane listeleme mantığı
+│   ├── services/                # izmir-open-data-js SDK entegrasyonu
+│   ├── types/                   # TypeScript veri arayüzleri
+│   └── utils/                   # Tarih ve dışa aktarım yardımcı fonksiyonları
+├── .editorconfig                # Evrensel düzenleyici kuralları
+├── .gitattributes               # Çapraz platform satır sonu denetimi
+├── .gitignore                   # Git takip dışı dosyalar listesi
+├── .markdownlint.json           # Dokümantasyon biçim kuralları
+├── .npmrc                       # Paket yöneticisi kuralları
+├── CONTRIBUTING.md              # Katkıda bulunma rehberi
+├── LICENSE                      # Apache 2.0 lisans metni
+├── package.json                 # Bağımlılıklar ve npm scriptleri
+├── README.md                    # Proje ana belgelendirmesi
+├── ROADMAP.md                   # Sürüm ve geliştirme planı
+├── SECURITY.md                  # Güvenlik politikası ve SLA
+├── tsconfig.json                # TypeScript derleme ayarları
+└── vite.config.ts               # Vite ve PWA eklenti yapılandırması
+```
+
+---
+
+## SDK Entegrasyonu
+
+Proje, İzmir Büyükşehir Belediyesi Açık Veri Portalı API çağrılarını yönetmek için `izmir-open-data-js` paketini kullanır.
+
+```typescript
+import { IzmirAPI } from "izmir-open-data-js";
+
+const api = new IzmirAPI();
+
+// İzmir genelindeki güncel nöbetçi eczaneleri çeker
+const nobetciEczaneler = await api.eczaneler.getNobetciList();
+console.log(`Aktif nöbetçi eczane sayısı: ${nobetciEczaneler.length}`);
+```
+
+---
+
+## Teknik SSS
+
+#### Veriler hangi kaynaktan ve hangi sıklıkla güncellenir?
+Veriler İzmir Büyükşehir Belediyesi Açık Veri Portalı üzerinden anlık olarak çekilir. Nöbetçi listesi her gün saat 18:00 itibarıyla güncellenir. İstemci tarafında `TanStack Query` 15 dakikalık bir önbellek süresi uygular.
+
+#### İnternet bağlantısı kesildiğinde uygulama çalışır mı?
+PWA servis işçisi arayüz kabuğunu çevrimdışı önbelleğe alır. Kullanıcı daha önce yüklenmiş harita görüntüsünü ve indirilen statik HTML veya JSON verilerini internetsiz ortamda görüntüleyebilir.
+
+#### Uygulama kullanıcı konumu veya çerez verisi toplar mı?
+Kullanıcının kesin koordinatları yalnızca tarayıcı üzerinde en yakın eczaneyi hesaplamak için kullanılır. Sunucuya konum kaydı aktarılmaz. Analitik takibi gizlilik odaklı ve çerezsiz Plausible altyapısı üzerinden yürütülür.
+
+---
+
+## Katkıda Bulunma ve Yönetişim
+
+Projeye katkı sunmak için lütfen [CONTRIBUTING.md](CONTRIBUTING.md) belgesini inceleyin. Topluluk standartları ve davranış kuralları için [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) belgesi geçerlidir. Değişiklik önerileri için [Pull Request Şablonu](.github/PULL_REQUEST_TEMPLATE/pull_request_template.md) ve hata bildirimleri için [Hata Raporu Şablonu](.github/ISSUE_TEMPLATE/bug_report.yml) kullanılmalıdır.
+
+Güvenlik açıkları için [SECURITY.md](SECURITY.md) dosyasındaki özel bildirim kanallarını takip ediniz.
+
+Gelecek sürüm hedefleri [ROADMAP.md](ROADMAP.md) dosyasında listelenmiştir.
+
+---
+
+## Lisans
+
+Bu proje [Apache License 2.0](LICENSE) kapsamında açık kaynak olarak yayımlanmıştır.

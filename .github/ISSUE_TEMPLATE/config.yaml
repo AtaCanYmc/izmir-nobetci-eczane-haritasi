@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerabilities
+    url: https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/security/policy
+    about: Please report security vulnerabilities privately according to our security policy.
+  - name: Questions & Suggestions
+    url: https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/issues
+    about: Propose features or ask general questions using our structured issue forms.

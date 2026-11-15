@@ -1,0 +1,39 @@
+name: Özellik Önerisi (Feature Request)
+description: Yeni bir harita özelliği, filtre veya mimari geliştirme önerin
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Önerinizin daha önce sunulup sunulmadığını veya [ROADMAP.md](../../ROADMAP.md) içerisinde planlanıp planlanmadığını kontrol edin.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Çözülmek İstenen Problem
+      description: Bu özelliğin çözmeyi hedeflediği teknik veya kullanıcı deneyimi darboğazını açıklayın.
+      placeholder: Kullanıcılar şu aşamada zorluk yaşıyor...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Önerilen Çözüm
+      description: Tasarlanan davranış veya arayüz değişikliğini detaylandırın.
+      placeholder: Harita üzerine şu katmanın eklenmesi...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Değerlendirilen Alternatifler
+      description: Varsa değerlendirdiğiniz diğer çözüm yolları veya geçici çözümler.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Kontrol Listesi
+      options:
+        - label: Benzer bir özellik talebi olup olmadığını kontrol ettim.
+          required: true
+        - label: Bu öneri projenin performans ve erişilebilirlik ilkelerine uygundur.
+          required: true

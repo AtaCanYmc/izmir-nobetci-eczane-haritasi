@@ -1,0 +1,50 @@
+name: Hata Bildirimi (Bug Report)
+description: Yeniden üretilebilir bir sistem hatası veya arayüz kusuru bildirin
+title: "fix: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Lütfen yeni bir kayıt açmadan önce mevcut açık veya kapalı sorunları kontrol edin.
+        Güvenlik açıkları için [SECURITY.md](../../SECURITY.md) dosyasındaki özel kanalı kullanın.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Hata Açıklaması
+      description: Karşılaştığınız hatayı açık ve net bir şekilde özetleyin.
+      placeholder: Hatanın ne zaman ve nasıl gerçekleştiğini açıklayın.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Yeniden Üretim Adımları
+      description: Sorunun tekrar üretilebilmesi için adım adım yönergeler.
+      placeholder: |
+        1. Haritada '...' bölgesine yakınlaşın
+        2. '...' butonuna tıklayın
+        3. Şu hatanın oluştuğunu gözlemleyin: '...'
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Beklenen Davranış
+      description: Sistemin normal koşullarda nasıl tepki vermesi gerekiyordu?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Konsol Çıktıları veya Ekran Görüntüleri
+      description: Varsa tarayıcı konsolu (F12) hatalarını veya ekran görüntülerini ekleyin.
+      render: shell
+  - type: input
+    id: environment
+    attributes:
+      label: Çalışma Ortamı
+      description: İşletim sistemi, tarayıcı ve ekran tipi (Örn: macOS Sequoia 15.1, Chrome 130, Mobil Safari).
+      placeholder: macOS / Chrome 130
+    validations:
+      required: true

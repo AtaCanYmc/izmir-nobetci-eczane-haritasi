@@ -1,56 +1,103 @@
-# Katkıda Bulunma Rehberi (Contributing Guidelines)
+# Katkıda Bulunma Rehberi (Contributing Guide)
 
-Öncelikle, İzmir Nöbetçi Eczane Haritası projesine katkıda bulunmayı düşündüğünüz için teşekkür ederiz! Açık kaynak topluluğu, bu gibi projeleri geliştirmek ve herkese faydalı bir hale getirmek için çok önemlidir.
+Bu rehber, **İzmir Nöbetçi Eczane Haritası** projesine katkıda bulunmak isteyen geliştiriciler için iş akışı, kodlama kuralları ve doğrulama adımlarını belirler.
 
-Aşağıda projeye nasıl katkıda bulunabileceğinize dair adımlar yer almaktadır.
+---
 
-## Geliştirme Ortamını Kurma
+## İçindekiler
 
-Kendi bilgisayarınızda projeyi ayağa kaldırmak için şu adımları izleyin:
+- [Geliştirme Ortamı Kurulumu](#geliştirme-ortamı-kurulumu)
+- [Dal (Branch) Adlandırma Standartları](#dal-branch-adlandırma-standartları)
+- [Commit Mesajı Standartları](#commit-mesajı-standartları)
+- [Doğrulama ve Derleme](#doğrulama-ve-derleme)
+- [Pull Request Süreci](#pull-request-süreci)
+- [Kodlama Standartları](#kodlama-standartları)
 
-1. **Projeyi Fork'layın:** GitHub üzerinden projeyi kendi hesabınıza forklayın.
-2. **Klonlayın:** Forkladığınız depoyu bilgisayarınıza indirin.
+---
+
+## Geliştirme Ortamı Kurulumu
+
+Projeyi yerel makinenizde çalıştırmak için Node.js 20+ gereklidir.
+
+1. Depoyu forklayın ve yerel ortamınıza klonlayın:
    ```bash
    git clone https://github.com/KULLANICI_ADINIZ/izmir-nobetci-eczane-haritasi.git
-   ```
-3. **Bağımlılıkları Yükleyin:** Proje dizinine giderek gerekli paketleri kurun.
-   ```bash
    cd izmir-nobetci-eczane-haritasi
+   ```
+
+2. Bağımlılıkları yükleyin:
+   ```bash
    npm install
    ```
-4. **Çalıştırın:** Geliştirme sunucusunu başlatın.
+
+3. Geliştirme sunucusunu başlatın:
    ```bash
    npm run dev
    ```
 
-## Katkı Yapma Adımları
+---
 
-1. **Yeni Bir Branch Açın:** Çalışmalarınızı `main` dalı üzerinde yapmamaya özen gösterin.
-   ```bash
-   git checkout -b feature/yeni-ozellik-adiniz
-   # veya hata düzeltmesi için
-   git checkout -b fix/hata-adi
-   ```
-2. **Değişikliklerinizi Yapın:** Kodunuzu yazarken projenin mevcut kodlama stillerine (ESLint ve TypeScript kuralları) uymaya gayret edin.
-3. **Type Check & Build:** Kodunuzu pushlamadan önce hatalara karşı test edin:
-   ```bash
-   npm run type-check && npm run build
-   ```
-4. **Commit Atın:** Yaptığınız değişiklikleri açıklayıcı bir mesajla commit'leyin.
-   ```bash
-   git commit -m "feat: haritaya yeni bir özellik eklendi"
-   ```
-5. **Push ve Pull Request:** Branch'inizi kendi deponuza push'layın ve ardından orijinal depoya bir **Pull Request (PR)** açın.
-   ```bash
-   git push origin feature/yeni-ozellik-adiniz
-   ```
+## Dal (Branch) Adlandırma Standartları
 
-## Hata (Bug) Bildirimi veya İstekler (Issues)
-- Kod yazmak istemiyor ancak bir hata bulduysanız veya yeni bir özellik öneriniz varsa, lütfen [Issues](https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/issues) kısmından detaylı bir açıklama ile kayıt oluşturun.
+Tüm geliştirmeler izole dallar üzerinden yürütülmelidir. `main` dalına doğrudan commit gönderilmez.
+
+| Dal Öneki | Amaç | Örnek |
+| :--- | :--- | :--- |
+| `feature/` | Yeni bir özellik veya kullanıcı arayüzü kabiliyeti | `feature/export-csv-button` |
+| `fix/` | Hata düzeltmesi veya uyumluluk onarımı | `fix/geolocation-safari-timeout` |
+| `docs/` | Dokümantasyon eklemeleri veya düzeltmeleri | `docs/update-architecture-flow` |
+| `refactor/` | Davranışı değiştirmeyen kod optimizasyonları | `refactor/leaflet-icon-loader` |
+| `chore/` | Bağımlılık, CI veya build araçları güncellemeleri | `chore/upgrade-vite-plugin-pwa` |
+
+---
+
+## Commit Mesajı Standartları
+
+Depo, [Conventional Commits](https://www.conventionalcommits.org/) standardını zorunlu tutar.
+
+Format: `<tür>(<kapsam>): <kısa açıklama>`
+
+| Tür | Kullanım Alanı | Örnek |
+| :--- | :--- | :--- |
+| `feat` | Yeni özellik veya harita katmanı | `feat(map): add offline export format selector` |
+| `fix` | Hata onarımı | `fix(cache): resolve tanstack query stale time overflow` |
+| `docs` | Dokümantasyon değişiklikleri | `docs(readme): update sdk usage example` |
+| `refactor` | Kod sadeleştirme ve temizlik | `refactor(types): consolidate eczane interface models` |
+| `test` | Test ekleme veya mevcut testleri güncelleme | `test(utils): add date formatting edge cases` |
+| `chore` | CI, build konfigürasyonu ve paket güncellemeleri | `chore(ci): add dependabot workflow` |
+
+---
+
+## Doğrulama ve Derleme
+
+Bir Pull Request açmadan önce yerel ortamınızda aşağıdaki doğrulama komutlarının hatasız geçtiğinden emin olun:
+
+```bash
+# Tip doğrulaması
+npm run type-check
+
+# Üretim paketi derlemesi
+npm run build
+```
+
+---
+
+## Pull Request Süreci
+
+1. Yeni bir çalışma dalı oluşturun:
+   ```bash
+   git checkout -b feature/kullanici-konum-takibi
+   ```
+2. Değişiklikleri Conventional Commit kurallarına uygun olarak kaydedin.
+3. Yerel doğrulama komutlarını çalıştırın (`npm run type-check && npm run build`).
+4. Dalınızı uzak depoya gönderin ve `main` dalına yönelik bir Pull Request açın.
+5. Açılan PR şablonundaki alanları doldurun ve ilgili Issue numarasını bağlayın (`Closes #12`).
+
+---
 
 ## Kodlama Standartları
-- React bileşenlerinde fonksiyonel yapıyı (Functional Components) ve Hooks mimarisini kullanıyoruz.
-- Stillendirmeler (Styling) için Tailwind CSS kullanıyoruz. Özelleştirilmiş bir CSS yazmadan önce, Tailwind utility class'larını tercih edin.
-- TypeScript kullanırken `any` kullanımından kaçının ve mümkün olduğunca spesifik arayüzler (Interfaces) oluşturun.
 
-Zaman ayırdığınız ve topluluğa destek olduğunuz için teşekkürler!
+- **TypeScript:** `any` tipi kullanımından kaçının. Modeller için `src/types/` altındaki tipleri kullanın veya genişletin.
+- **Bileşenler:** Fonksiyonel React bileşenleri ve React Hooks mimarisini tercih edin.
+- **Stil Yönetimi:** Arayüz stilleri için Tailwind CSS v4 utility sınıflarını kullanın. Harici özel CSS tanımlamalarından kaçının.
+- **Harita Bileşenleri:** Leaflet DOM manipülasyonlarını doğrudan yapmak yerine `react-leaflet` bileşenleri ve özel hook'lar üzerinden yönetin.
