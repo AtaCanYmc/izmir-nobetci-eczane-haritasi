@@ -31,8 +31,32 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         } else {
             root.classList.remove('dark');
         }
-        localStorage.setItem('theme', theme);
+
+        let meta = document.querySelector('meta[name="color-scheme"]') as HTMLMetaElement | null;
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.name = 'color-scheme';
+            document.head.appendChild(meta);
+        }
+        meta.content = theme;
+
+        try {
+            localStorage.setItem('theme', theme);
+        } catch {
+            // Safari private browsing or disabled storage fallback
+        }
     }, [theme]);
+
+    useEffect(() => {
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'theme' && (e.newValue === 'light' || e.newValue === 'dark')) {
+                setTheme(e.newValue);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
 
     const toggleTheme = () => {
         setTheme(prev => prev === 'light' ? 'dark' : 'light');
