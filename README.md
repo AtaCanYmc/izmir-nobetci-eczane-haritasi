@@ -131,7 +131,8 @@ flowchart TD
 │   ├── PULL_REQUEST_TEMPLATE/   # PR doğrulama şablonu
 │   └── workflows/
 │       ├── ci.yml               # Otomatik tip ve link denetimi
-│       └── deploy.yml           # GitHub Pages yayınlama hattı
+│       ├── deploy.yml           # GitHub Pages yayınlama hattı
+│       └── release-please.yml   # Otomatik sürüm ve changelog yayını
 ├── docs/
 │   └── images/                  # Belgelendirme ekran görüntüleri
 ├── public/                      # Web manifest ve statik PWA varlıkları
@@ -153,11 +154,13 @@ flowchart TD
 ├── .gitignore                   # Git takip dışı dosyalar listesi
 ├── .markdownlint.json           # Dokümantasyon biçim kuralları
 ├── .npmrc                       # Paket yöneticisi kuralları
+├── .release-please-manifest.json # Release Please sürüm takibi
 ├── CONTRIBUTING.md              # Katkıda bulunma rehberi
 ├── LICENSE                      # Apache 2.0 lisans metni
 ├── Makefile                     # Geliştirme ve derleme komutları
 ├── package.json                 # Bağımlılıklar ve npm scriptleri
 ├── README.md                    # Proje ana belgelendirmesi
+├── release-please-config.json   # Release Please yapılandırması
 ├── ROADMAP.md                   # Sürüm ve geliştirme planı
 ├── SECURITY.md                  # Güvenlik politikası ve SLA
 ├── tsconfig.json                # TypeScript derleme ayarları
