@@ -2,8 +2,6 @@ import type {Eczane} from "../types/eczane.ts";
 
 import { IzmirAPI } from "izmir-open-data-js";
 
-// SDK örneği oluşturuyoruz.
-// API istekleri doğrudan bu istemci üzerinden yapılacak.
 export const izmirApi = new IzmirAPI();
 
 export const fetchNobetciEczaneler = async (): Promise<Eczane[]> => {

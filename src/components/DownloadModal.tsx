@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {X, Image, FileJson, FileText, MapPin, FileCode} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import { useTheme } from '../contexts/ThemeContext.tsx';
@@ -19,6 +20,19 @@ export const DownloadModal = ({
     const { theme } = useTheme();
     const isDarkMode = theme === 'dark';
     const mapTitle = "Izmir Nobetci Eczaneler";
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 
@@ -288,21 +302,27 @@ export const DownloadModal = ({
 
             {/* Modal */}
             <div className="fixed inset-0 z-[2001] flex items-center justify-center p-4">
-                <div className={`rounded-2xl shadow-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto no-scrollbar animate-in fade-in zoom-in-95 duration-200 border ${
+                <div 
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="download-modal-title"
+                    className={`rounded-2xl shadow-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto no-scrollbar animate-in fade-in zoom-in-95 duration-200 border ${
                     isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
                 }`}>
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>
+                        <h2 id="download-modal-title" className={`text-2xl font-bold ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                             İndirme Formatı Seç
                         </h2>
                         <button
+                            type="button"
                             onClick={onClose}
-                            className={`h-10 w-10 rounded-full flex items-center justify-center transition-colors ${
-                                isDarkMode ? 'hover:bg-slate-700 text-slate-500' : 'hover:bg-slate-100 text-slate-400'
+                            aria-label="Pencereyi kapat"
+                            className={`min-h-[44px] min-w-[44px] rounded-full flex items-center justify-center transition-colors ${
+                                isDarkMode ? 'hover:bg-slate-700 text-slate-400' : 'hover:bg-slate-100 text-slate-500'
                             }`}
                         >
-                            <X size={24} className={isDarkMode ? 'dark:text-slate-500' : 'text-slate-400'} />
+                            <X size={24} />
                         </button>
                     </div>
 

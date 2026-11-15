@@ -77,19 +77,19 @@ const PharmacyPage = () => {
         }
     };
 
-    // ------------------------ UI BÖLÜMÜ ------------------------
-
     const getLocationWarning = () => {
         if (locationStatus !== 'denied' || !showLocationWarning) return null;
 
         return (
             <div
-                className="absolute top-20 left-4 right-4 md:left-auto md:right-8 md:w-80 z-[2000] animate-in fade-in slide-in-from-top-4">
+                className="absolute top-20 left-4 right-4 md:left-auto md:right-8 md:w-80 z-[2000] animate-in fade-in slide-from-top-4">
                 <div
                     className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-5 rounded-[2rem] shadow-2xl border border-red-100 dark:border-red-900 relative group">
                     <button
+                        type="button"
                         onClick={() => setShowLocationWarning(false)}
-                        className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        aria-label="Konum uyarısını kapat"
+                        className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                     >
                         <X size={18}/>
                     </button>
@@ -118,8 +118,9 @@ const PharmacyPage = () => {
                     </div>
 
                     <button
+                        type="button"
                         onClick={() => handleRetryLocationPermission()}
-                        className="w-full mt-3 py-2 text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+                        className="w-full mt-3 py-2.5 text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors min-h-[44px] flex items-center justify-center"
                     >
                         Ayarları Tamamladım, Tekrar Dene
                     </button>
@@ -135,34 +136,40 @@ const PharmacyPage = () => {
                     <h1 className="text-2xl font-black text-red-600 tracking-tighter">
                         İZMİR ECZANE
                     </h1>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">
+                    <p className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">
                         Nöbetçi Eczane Listesi
                     </p>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-1">
                     <button 
+                        type="button"
                         onClick={() => {
                             setIsDownloadOpen(true);
                             trackEvent('open_download_modal');
                         }}
-                        className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                        aria-label="Verileri ve haritayı dışa aktar"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                         title="İndir / Dışa Aktar"
                     >
                         <Download size={20} />
                     </button>
                     <button 
+                        type="button"
                         onClick={() => {
                             setIsDocsOpen(true);
                             trackEvent('open_dev_docs');
                         }}
-                        className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                        aria-label="Geliştirici dokümantasyonunu aç"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                         title="Geliştiriciler İçin"
                     >
                         <Code size={20} />
                     </button>
                     <button 
+                        type="button"
                         onClick={toggleTheme}
-                        className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                        aria-label={theme === 'dark' ? "Aydınlık temaya geç" : "Karanlık temaya geç"}
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                         title="Temayı Değiştir"
                     >
                         {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -180,6 +187,7 @@ const PharmacyPage = () => {
             <div className="mt-6">
                 <input
                     type="text"
+                    aria-label="Eczane veya ilçe ara"
                     placeholder="Eczane veya ilçe ara..."
                     className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
                     value={searchTerm}
@@ -193,8 +201,10 @@ const PharmacyPage = () => {
         if (isMobile) {
             return (
                 <button
+                    type="button"
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="md:hidden absolute top-4 right-4 z-[9999] bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 text-red-600 transition-colors"
+                    aria-label={isSidebarOpen ? "Menüyü kapat" : "Eczane listesini aç"}
+                    className="md:hidden absolute top-4 right-4 z-[9999] bg-white dark:bg-slate-900 min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 text-red-600 transition-colors"
                 >
                     <Menu size={24}/>
                 </button>
@@ -203,10 +213,12 @@ const PharmacyPage = () => {
 
         return (
             <button
+                type="button"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className={`absolute top-4 z-[1002] bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 text-red-600 transition-all duration-300 ${
+                aria-label={isSidebarOpen ? "Menüyü gizle" : "Menüyü genişlet"}
+                className={`absolute top-4 z-[1002] bg-white dark:bg-slate-900 min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 text-red-600 transition-all duration-300 ${
                     isSidebarOpen ? 'left-[390px]' : 'left-4'
-                } md:flex hidden`} // Masaüstü için
+                } md:flex hidden`}
             >
                 {isSidebarOpen ? <ChevronLeft size={24}/> : <Menu size={24}/>}
             </button>
@@ -230,13 +242,14 @@ const PharmacyPage = () => {
                 </div>
             ) : (
                 eczaneler.map((eczane) => (
-                    <div
+                    <button
+                        type="button"
                         key={`${eczane.Adi}-${eczane.LokasyonX}`}
                         onClick={() => {
                             setSelectedEczane(eczane);
                             trackEvent('view_pharmacy', { pharmacy: eczane.Adi, bolge: eczane.Bolge });
                         }}
-                        className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                        className={`w-full text-left p-4 rounded-2xl border transition-all duration-200 cursor-pointer block ${
                             selectedEczane?.Adi === eczane.Adi
                                 ? 'border-red-500 bg-white dark:bg-slate-800 shadow-md ring-1 ring-red-500/20'
                                 : 'border-transparent dark:border-slate-800 bg-white dark:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-600 shadow-sm'
@@ -246,12 +259,12 @@ const PharmacyPage = () => {
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{eczane.Adres}</p>
                         <div className="flex items-center justify-between mt-3">
                             <span
-                                className="text-[9px] bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-slate-600 dark:text-slate-300 font-bold uppercase">
+                                className="text-[10px] bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded text-slate-700 dark:text-slate-300 font-bold uppercase">
                                 {eczane.Bolge}
                             </span>
                             <span className="text-xs text-red-600 dark:text-red-400 font-bold">{eczane.Telefon}</span>
                         </div>
-                    </div>
+                    </button>
                 ))
             )}
         </div>

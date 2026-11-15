@@ -13,6 +13,20 @@
     --color-primary: #dc2626; /* Kırmızı rengimiz */
 }
 
+/* Erişilebilir etkileşim göstergeleri (R-39 & R-32) */
+button, a, summary, select, [role="button"] {
+    cursor: pointer;
+}
+
+button:disabled, [disabled] {
+    cursor: not-allowed;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 /* OpenStreetMap karartma filtresi (Karanlık Mod) */
 .dark .osm-dark-tiles .leaflet-tile {
     filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3);

@@ -37,27 +37,31 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
     const getEczanePopupContent = (eczane: Eczane) => (
         <div className="p-1 min-w-[150px]">
             <h3 className="font-bold text-gray-900 border-b pb-1 mb-1">{eczane.Adi}</h3>
-            <p className="text-[11px] text-gray-600 mb-2 leading-tight">{eczane.Adres}</p>
+            <p className="text-xs text-gray-700 mb-2 leading-tight">{eczane.Adres}</p>
             <div className="flex flex-col gap-1.5">
                 <div className="flex flex-col gap-2 sm:flex-col pb-3">
                     <button
+                        type="button"
                         onClick={() => callEczane(eczane)}
-                        className="flex-1 bg-red-600 text-white text-center py-2 rounded-xl font-bold text-xs">
+                        aria-label={`${eczane.Adi} eczanesini telefonla ara`}
+                        className="flex-1 bg-red-600 text-white text-center py-2.5 rounded-xl font-bold text-xs min-h-[38px] hover:bg-red-700 transition-colors">
                         ARA
                     </button>
                     <button
+                        type="button"
                         onClick={() => openEczaneOnMap(eczane)}
-                        className="flex-1 bg-slate-900 text-white py-2 rounded-xl font-bold text-xs">
+                        aria-label={`${eczane.Adi} eczanesi için haritada yol tarifi al`}
+                        className="flex-1 bg-slate-900 text-white py-2.5 rounded-xl font-bold text-xs min-h-[38px] hover:bg-slate-800 transition-colors">
                         YOL TARİFİ
                     </button>
                 </div>
-                <div className="flex justify-between items-center text-[9px] text-gray-400">
+                <div className="flex justify-between items-center text-[11px] text-slate-500">
                     <span>📅 {formatDate(eczane.Tarih)}</span>
                     <span className="font-bold text-red-800 uppercase">{eczane.Bolge}</span>
                 </div>
                 {eczane.BolgeAciklama && (
                     <div
-                        className="p-1 bg-amber-50 border border-amber-100 rounded text-[10px] text-amber-800 italic">
+                        className="p-1.5 bg-amber-50 border border-amber-100 rounded text-[11px] text-amber-900 italic">
                         {eczane.BolgeAciklama}
                     </div>
                 )}
@@ -69,7 +73,6 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
         const lat = parseFloat(eczane.LokasyonX);
         const lng = parseFloat(eczane.LokasyonY);
 
-        // Geçersiz koordinat kontrolü
         if (isNaN(lat) || isNaN(lng)) return null;
 
         const isSelected = selectedEczane?.Adi === eczane.Adi;
@@ -97,9 +100,8 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
 
         const handleClick = () => {
             if (userLocation) {
-                // Haritayı kullanıcının konumuna yumuşak bir geçişle (flyTo) odaklar
                 map.flyTo(userLocation, 15, {
-                    duration: 1.5 // Saniye cinsinden geçiş süresi
+                    duration: 1.5
                 });
             } else {
                 alert("Konumunuz henüz alınamadı. Lütfen izin verdiğinizden emin olun.");
@@ -108,11 +110,12 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
 
         return (
             <div className="leaflet-bottom leaflet-right !mb-24 !ml-3">
-                {/* Zoom kontrolüne çarpmaması için margin değerlerini ayarladık */}
                 <div className="leaflet-control">
                     <button
+                        type="button"
                         onClick={handleClick}
-                        className="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-90 group"
+                        aria-label="Konumuma Dön"
+                        className="bg-white dark:bg-slate-800 min-w-[44px] min-h-[44px] flex items-center justify-center p-3 rounded-xl shadow-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-90 group"
                         title="Konumuma Dön"
                     >
                         <svg

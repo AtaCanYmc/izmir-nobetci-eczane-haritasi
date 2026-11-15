@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { Eczane } from "../../types/eczane.ts";
 import { openEczaneOnMap, callEczane } from "../../services/api.ts";
 import { X } from "lucide-react";
@@ -10,6 +11,19 @@ interface PharmacyDetailsCardProps {
 
 export const PharmacyDetailsCard = ({ selectedEczane, setSelectedEczane }: PharmacyDetailsCardProps) => {
     const { trackEvent } = useAnalytics();
+
+    useEffect(() => {
+        if (!selectedEczane) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setSelectedEczane(null);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [selectedEczane, setSelectedEczane]);
 
     if (!selectedEczane) return null;
 
@@ -29,8 +43,10 @@ export const PharmacyDetailsCard = ({ selectedEczane, setSelectedEczane }: Pharm
             <div className="absolute bottom-8 right-8 z-[1000] w-80 hidden md:block animate-in fade-in slide-in-from-bottom-8">
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-2xl border border-slate-100 dark:border-slate-800 relative transition-colors">
                     <button
+                        type="button"
                         onClick={() => setSelectedEczane(null)}
-                        className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        aria-label="Eczane detaylarını kapat"
+                        className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -67,8 +83,10 @@ export const PharmacyDetailsCard = ({ selectedEczane, setSelectedEczane }: Pharm
                 <div className="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-2" />
                 <div className="p-6 pt-2 relative">
                     <button
+                        type="button"
                         onClick={() => setSelectedEczane(null)}
-                        className="absolute top-2 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        aria-label="Eczane detaylarını kapat"
+                        className="absolute top-2 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                     >
                         <X size={24} />
                     </button>

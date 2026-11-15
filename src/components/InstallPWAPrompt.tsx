@@ -80,8 +80,10 @@ export const InstallPWAPrompt = () => {
                 isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
             }`}>
                 <button
+                    type="button"
                     onClick={handleDismiss}
-                    className={`absolute top-3 right-3 p-1.5 rounded-full transition-colors ${
+                    aria-label="Yükleme bildirimini kapat"
+                    className={`absolute top-2 right-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-colors ${
                         isDark ? 'text-slate-400 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
                     }`}
                 >
@@ -120,8 +122,9 @@ export const InstallPWAPrompt = () => {
                     </div>
                 ) : (
                     <button
+                        type="button"
                         onClick={handleInstallClick}
-                        className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-lg shadow-red-600/20 active:scale-[0.98]"
+                        className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-lg shadow-red-600/20 active:scale-[0.98] min-h-[44px]"
                     >
                         Hemen Yükle
                     </button>

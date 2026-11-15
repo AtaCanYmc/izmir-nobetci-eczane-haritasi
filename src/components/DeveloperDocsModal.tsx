@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { X, Code, Terminal } from "lucide-react";
 
 interface DeveloperDocsModalProps {
@@ -6,14 +7,38 @@ interface DeveloperDocsModalProps {
 }
 
 export const DeveloperDocsModal = ({ isOpen, onClose }: DeveloperDocsModalProps) => {
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 m-4 relative animate-in zoom-in-95">
+        <div 
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in"
+            onClick={onClose}
+        >
+            <div 
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="developer-docs-title"
+                className="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 m-4 relative animate-in zoom-in-95"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <button
+                    type="button"
                     onClick={onClose}
-                    className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    aria-label="Pencereyi kapat"
+                    className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                     <X size={24} />
                 </button>
@@ -24,7 +49,7 @@ export const DeveloperDocsModal = ({ isOpen, onClose }: DeveloperDocsModalProps)
                             <Code size={28} />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                            <h2 id="developer-docs-title" className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                                 Geliştiriciler İçin
                             </h2>
                             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
