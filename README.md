@@ -56,9 +56,9 @@ flowchart TD
     Client -->|"useQuery (15 dk önbellek)"| QueryLayer["TanStack Query Önbellek Katmanı"]
     QueryLayer -->|"API İstemi"| SDK["izmir-open-data-js SDK"]
     SDK -->|"HTTPS JSONP / REST"| IBB["İzmir BŞB Açık Veri Portalı (data.izmir.bel.tr)"]
-    IBB -->>|"Nöbetçi Eczane Veri Kümesi"| SDK
-    SDK -->>|"Tiplendirilmiş Eczane[]"| QueryLayer
-    QueryLayer -->>|"Harita Marker & Liste Çizimi"| Client
+    IBB -.->|"Nöbetçi Eczane Veri Kümesi"| SDK
+    SDK -.->|"Tiplendirilmiş Eczane[]"| QueryLayer
+    QueryLayer -->|"Harita Marker & Liste Çizimi"| Client
 ```
 
 ---
