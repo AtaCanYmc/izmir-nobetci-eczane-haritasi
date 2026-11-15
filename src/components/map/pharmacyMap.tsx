@@ -150,9 +150,20 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
         }
     }, []);
 
-    const tileUrl = theme === 'dark' 
-        ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+    const cartoApiKey = import.meta.env.VITE_CARTO_API_KEY;
+
+    let tileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+    let tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    let isOsmDark = false;
+
+    if (cartoApiKey) {
+        tileUrl = theme === 'dark'
+            ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`
+            : `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`;
+        tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+    } else if (theme === 'dark') {
+        isOsmDark = true;
+    }
 
     return (
         <div className="h-full w-full relative z-0 min-h-[100vh] transition-colors">
@@ -163,8 +174,11 @@ export const PharmacyMap = (props: PharmacyMapProps) => {
                 zoomControl={false}
             >
                 <TileLayer
+                    key={`${tileUrl}-${theme}`}
                     url={tileUrl}
-                    attribution='&copy; OpenStreetMap'
+                    attribution={tileAttribution}
+                    className={isOsmDark ? "osm-dark-tiles" : undefined}
+                    maxZoom={19}
                 />
 
                 <MapController selectedEczane={selectedEczane}/>

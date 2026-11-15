@@ -67,7 +67,7 @@ flowchart TD
 
 - **Konum Odaklı Harita:** Leaflet ve React-Leaflet motoru ile kullanıcının mevcut konumunu tespit eder ve çevresindeki nöbetçi eczaneleri mesafeye göre listeler.
 - **Akıllı Önbellek Yönetimi:** TanStack Query ile eczane verileri 15 dakika boyunca istemci belleğinde tutulur. Gereksiz ağ istekleri önlenir.
-- **Dinamik Harita Temaları:** Açık ve koyu renk şemasına göre `CartoDB Voyager` ve `CartoDB Dark Matter` harita katmanları otomatik olarak devreye girer.
+- **Dinamik Harita Temaları:** Harita katmanı açık ve karanlık mod ile senkronize çalışır. Varsayılan olarak API anahtarı gerektirmeyen OpenStreetMap kullanılır; isteğe bağlı olarak CARTO API anahtarı (`VITE_CARTO_API_KEY`) ile CARTO Voyager ve Dark Matter katmanları da etkinleştirilebilir.
 - **Çoklu Dışa Aktarım (Export):** Aktif harita alanını PNG görseli olarak kaydedebilir; nöbetçi eczane listesini JSON, CSV, GeoJSON veya bağımsız çalışan statik HTML formatında indirebilirsiniz.
 - **Progressive Web App (PWA):** Servis işçisi (Service Worker) altyapısı sayesinde mobil ve masaüstü tarayıcılarda ana ekrana yüklenebilir ve uygulama gibi çalışır.
 
@@ -97,17 +97,28 @@ flowchart TD
    ```
    *Not: Depoda yer alan `.npmrc` yapılandırması bağımlılık çözümleme uyarılarını otomatik olarak yönetir.*
 
-3. Geliştirme sunucusunu başlatın:
+3. (İsteğe Bağlı) Ortam değişkenlerini yapılandırın:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Geliştirme sunucusunu başlatın:
    ```bash
    npm run dev
    ```
    Yerel adres: `http://localhost:5173`
 
-4. Üretim paketi derleme ve doğrulama:
+5. Üretim paketi derleme ve doğrulama:
    ```bash
    npm run type-check
    npm run build
    ```
+
+### Ortam Değişkenleri
+
+| Değişken | Tür | Varsayılan | Zorunlu | Açıklama |
+| :--- | :--- | :--- | :---: | :--- |
+| `VITE_CARTO_API_KEY` | String | *(Boş)* | Hayır | CARTO Basemaps API anahtarı. Boş bırakıldığında harita doğrudan açık kaynak OpenStreetMap katmanını kullanır. |
 
 ---
 
@@ -137,12 +148,14 @@ flowchart TD
 │   ├── types/                   # TypeScript veri arayüzleri
 │   └── utils/                   # Tarih ve dışa aktarım yardımcı fonksiyonları
 ├── .editorconfig                # Evrensel düzenleyici kuralları
+├── .env.example                 # Ortam değişkenleri şablonu
 ├── .gitattributes               # Çapraz platform satır sonu denetimi
 ├── .gitignore                   # Git takip dışı dosyalar listesi
 ├── .markdownlint.json           # Dokümantasyon biçim kuralları
 ├── .npmrc                       # Paket yöneticisi kuralları
 ├── CONTRIBUTING.md              # Katkıda bulunma rehberi
 ├── LICENSE                      # Apache 2.0 lisans metni
+├── Makefile                     # Geliştirme ve derleme komutları
 ├── package.json                 # Bağımlılıklar ve npm scriptleri
 ├── README.md                    # Proje ana belgelendirmesi
 ├── ROADMAP.md                   # Sürüm ve geliştirme planı

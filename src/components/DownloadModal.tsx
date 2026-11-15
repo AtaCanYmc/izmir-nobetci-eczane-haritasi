@@ -165,7 +165,7 @@ export const DownloadModal = ({
         const map = L.map('map').setView([38.4237, 27.1428], 11);
         
         // Tile layer ekle
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(map);
