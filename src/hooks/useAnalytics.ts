@@ -14,7 +14,7 @@ export const useAnalytics = () => {
     }, []);
 
     // Custom event tracking
-    const trackEvent = (eventName: string, props?: Record<string, any>) => {
+    const trackEvent = (eventName: string, props?: Record<string, string | number | boolean>) => {
         plausible.trackEvent(eventName, { props });
     };
 

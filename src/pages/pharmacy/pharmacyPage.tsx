@@ -8,6 +8,15 @@ import usePharmacyPage from "./usePharmacyPage.ts";
 import { PharmacyDetailsCard } from "../../components/map/PharmacyDetailsCard.tsx";
 import { DeveloperDocsModal } from "../../components/DeveloperDocsModal.tsx";
 import { DownloadModal } from "../../components/DownloadModal.tsx";
+import { MigrationModal } from "../../components/MigrationModal.tsx";
+import { MigrationBanner } from "../../components/MigrationBanner.tsx";
+import {
+    shouldShowMigration,
+    isMigrationModalDismissed,
+    dismissMigrationModal,
+    isMigrationBannerDismissed,
+    dismissMigrationBanner
+} from "../../utils/migrationUtils.ts";
 import html2canvas from 'html2canvas';
 import { useRef, useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext.tsx";
@@ -35,6 +44,40 @@ const PharmacyPage = () => {
     const [isDocsOpen, setIsDocsOpen] = useState(false);
     const [isDownloadOpen, setIsDownloadOpen] = useState(false);
     const mapContainerRef = useRef<HTMLDivElement>(null);
+
+    const [isMigrationActive] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        return shouldShowMigration(window.location.hostname, window.location.search);
+    });
+
+    const [isMigrationModalOpen, setIsMigrationModalOpen] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        const active = shouldShowMigration(window.location.hostname, window.location.search);
+        return active && !isMigrationModalDismissed();
+    });
+
+    const [isMigrationBannerVisible, setIsMigrationBannerVisible] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        const active = shouldShowMigration(window.location.hostname, window.location.search);
+        const modalDismissed = isMigrationModalDismissed();
+        const bannerDismissed = isMigrationBannerDismissed();
+        return active && modalDismissed && !bannerDismissed;
+    });
+
+    const handleDismissMigrationModal = () => {
+        dismissMigrationModal();
+        setIsMigrationModalOpen(false);
+        if (!isMigrationBannerDismissed()) {
+            setIsMigrationBannerVisible(true);
+        }
+        trackEvent('dismiss_migration_modal');
+    };
+
+    const handleDismissMigrationBanner = () => {
+        dismissMigrationBanner();
+        setIsMigrationBannerVisible(false);
+        trackEvent('dismiss_migration_banner');
+    };
 
     const handleDownloadPNG = async () => {
         if (!mapContainerRef.current) {
@@ -80,9 +123,11 @@ const PharmacyPage = () => {
     const getLocationWarning = () => {
         if (locationStatus !== 'denied' || !showLocationWarning) return null;
 
+        const topPosition = isMigrationActive && isMigrationBannerVisible ? 'top-28' : 'top-20';
+
         return (
             <div
-                className="absolute top-20 left-4 right-4 md:left-auto md:right-8 md:w-80 z-[2000] animate-in fade-in slide-from-top-4">
+                className={`absolute ${topPosition} left-4 right-4 md:left-auto md:right-8 md:w-80 z-[2000] animate-in fade-in slide-from-top-4 transition-all duration-300`}>
                 <div
                     className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-5 rounded-[2rem] shadow-2xl border border-red-100 dark:border-red-900 relative group">
                     <button
@@ -216,7 +261,9 @@ const PharmacyPage = () => {
                 type="button"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 aria-label={isSidebarOpen ? "Menüyü gizle" : "Menüyü genişlet"}
-                className={`absolute top-4 z-[1002] bg-white dark:bg-slate-900 min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 text-red-600 transition-all duration-300 ${
+                className={`absolute z-[1002] bg-white dark:bg-slate-900 min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 text-red-600 transition-all duration-300 ${
+                    isMigrationActive && isMigrationBannerVisible ? 'top-14' : 'top-4'
+                } ${
                     isSidebarOpen ? 'left-[390px]' : 'left-4'
                 } md:flex hidden`}
             >
@@ -302,6 +349,7 @@ const PharmacyPage = () => {
                 <title>İzmir Nöbetçi Eczaneler | Canlı Harita ve Açık Veri</title>
                 <meta name="description" content="İzmir açık verisi (izmir-open-data) ile beslenen en güncel nöbetçi eczaneler haritası. Size en yakın eczaneyi bulun, anında arayın ve yol tarifi alın." />
                 <meta name="keywords" content="izmir nöbetçi eczane, eczane haritası, nöbetçi eczaneler bugün, izmir açık veri, izmir-open-data" />
+                <link rel="canonical" href="https://izmirharitalari.atacanymc.com.tr/" />
                 <meta property="og:title" content="İzmir Nöbetçi Eczaneler | Canlı Harita" />
                 <meta property="og:description" content="İzmir'deki tüm güncel nöbetçi eczaneleri harita üzerinde görün, yol tarifi alın ve tek tıkla arayın." />
             </Helmet>
@@ -336,6 +384,15 @@ const PharmacyPage = () => {
             />
 
             <main className="flex-1 relative bg-slate-100 dark:bg-slate-800 h-full overflow-hidden transition-colors">
+                <MigrationBanner
+                    isVisible={isMigrationActive && isMigrationBannerVisible}
+                    onDismiss={handleDismissMigrationBanner}
+                />
+                <MigrationModal
+                    isOpen={isMigrationActive && isMigrationModalOpen}
+                    onDismiss={handleDismissMigrationModal}
+                />
+
                 {getLoading()}
                 {getEczaneMap()}
                 

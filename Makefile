@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview type-check lint lint-fix clean clean-all check
+.PHONY: help install dev build preview type-check test lint lint-fix clean clean-all check
 
 help: ## Mevcut komutlari ve aciklamalarini listeler
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -16,6 +16,9 @@ build: ## TypeScript kontrolu yapar ve uretim paketini derler (dist)
 type-check: ## TypeScript tip kontrolunu calistirir
 	npm run type-check
 
+test: ## Birim testleri calistirir
+	npm run test
+
 lint: ## ESLint kod kalitesi denetimini calistirir
 	npm run lint
 
@@ -25,7 +28,7 @@ lint-fix: ## ESLint ile otomatik duzeltilebilir hatalari onarir
 preview: ## Uretim derlemesini yerel ortamda onizler
 	npm run preview
 
-check: type-check build ## CI oncesi tip kontrolu ve build dogrulamasini calistirir
+check: type-check test build ## CI oncesi tip kontrolu, birim testleri ve build dogrulamasini calistirir
 
 clean: ## Derleme ciktilarini (dist) temizler
 	rm -rf dist

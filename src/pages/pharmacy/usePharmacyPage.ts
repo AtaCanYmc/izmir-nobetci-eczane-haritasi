@@ -31,7 +31,6 @@ const usePharmacyPage = () => {
         }
     }, [isError]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const checkLocationPermission = async () => {
         // 1. Standart Permissions API kontrolü (Chrome, Firefox, Edge)
         if (navigator.permissions && navigator.permissions.query) {
@@ -80,6 +79,7 @@ const usePharmacyPage = () => {
         }, 1000 * 5); // Her 5 saniyede bir kontrol et
         
         return () => clearInterval(intervalId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const filteredEczaneler = useMemo(() => {

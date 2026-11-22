@@ -3,10 +3,24 @@ import { X, Share, PlusSquare, Download } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext.tsx';
 import { useAnalytics } from '../hooks/useAnalytics.ts';
 
+interface BeforeInstallPromptEvent extends Event {
+    prompt: () => Promise<void>;
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
 export const InstallPWAPrompt = () => {
-    const [isIOS, setIsIOS] = useState(false);
-    const [isStandalone, setIsStandalone] = useState(false);
-    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [isIOS] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    });
+    const [isStandalone] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        const nav = window.navigator as Navigator & { standalone?: boolean };
+        return window.matchMedia('(display-mode: standalone)').matches 
+            || Boolean(nav.standalone) 
+            || document.referrer.includes('android-app://');
+    });
+    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [showPrompt, setShowPrompt] = useState(false);
     
     const { theme } = useTheme();
@@ -14,41 +28,29 @@ export const InstallPWAPrompt = () => {
     const { trackEvent } = useAnalytics();
 
     useEffect(() => {
-        // Zaten uygulama olarak (standalone) açılmışsa gösterme
-        const isAppMode = window.matchMedia('(display-mode: standalone)').matches 
-                       || (window.navigator as any).standalone 
-                       || document.referrer.includes('android-app://');
-                       
-        setIsStandalone(!!isAppMode);
-
-        if (isAppMode) return;
+        if (isStandalone) return;
 
         // Daha önce kapatılmış mı kontrol et
         const hasDismissed = localStorage.getItem('pwa_prompt_dismissed');
         if (hasDismissed) return;
 
-        // iOS Kontrolü
-        const userAgent = window.navigator.userAgent.toLowerCase();
-        const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
-        setIsIOS(isIOSDevice);
-
-        if (isIOSDevice) {
+        if (isIOS) {
             // iOS için biraz gecikmeli göster (kullanıcı siteyi 3 sn incelesin)
             const timer = setTimeout(() => setShowPrompt(true), 3000);
             return () => clearTimeout(timer);
         }
 
         // Android / Chrome için yerel PWA yükleme prompt'unu yakala
-        const handleBeforeInstallPrompt = (e: any) => {
+        const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();
-            setDeferredPrompt(e);
+            setDeferredPrompt(e as BeforeInstallPromptEvent);
             setShowPrompt(true);
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
         return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    }, []);
+    }, [isIOS, isStandalone]);
 
     if (!showPrompt || isStandalone) return null;
 
