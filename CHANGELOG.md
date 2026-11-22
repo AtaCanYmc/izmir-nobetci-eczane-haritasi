@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/compare/izmir-nobetci-eczane-haritasi-v1.1.0...izmir-nobetci-eczane-haritasi-v1.2.0) (2026-11-22)
+
+
+### Features
+
+* **migration:** add domain sunset modal redirecting to izmirharitalari.atacanymc.com.tr ([60b63e4](https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/commit/60b63e46c4b41f30f7d0bf951739649363945099))
+
 ## [1.1.0](https://github.com/AtaCanYmc/izmir-nobetci-eczane-haritasi/compare/izmir-nobetci-eczane-haritasi-v1.0.0...izmir-nobetci-eczane-haritasi-v1.1.0) (2026-11-15)
 
 
